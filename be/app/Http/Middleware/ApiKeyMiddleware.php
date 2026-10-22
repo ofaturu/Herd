@@ -9,19 +9,21 @@ use Symfony\Component\HttpFoundation\Response;
 class ApiKeyMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request for Postman / automated tooling API key protection.
+     * Note: API Key header is strictly for server-to-server / Postman tooling access.
+     * User authentication must use Sanctum session/token.
      *
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $apiKey = $request->header('X-API-KEY');
-        $validKey = config('services.api_key', env('API_KEY'));
+        $providedKey = $request->header('X-API-KEY');
+        $configuredKey = config('services.api_key');
 
-        if (!$apiKey || $apiKey !== $validKey) {
+        if (! $configuredKey || ! is_string($providedKey) || ! hash_equals($configuredKey, $providedKey)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized: API Key tidak valid atau tidak disertakan.'
+                'message' => 'Unauthorized: API Key tidak valid atau tidak disertakan.',
             ], 401);
         }
 

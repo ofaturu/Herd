@@ -19,7 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'api.key' => ApiKeyMiddleware::class,
+            'role' => \App\Http\Middleware\EnsureUserRole::class,
         ]);
+
+        $middleware->statefulApi();
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
