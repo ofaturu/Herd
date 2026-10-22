@@ -28,11 +28,25 @@ class RiwayatStatus extends Model
         ];
     }
 
+    /**
+     * Relasi ke pengajuan terkait.
+     */
     public function pengajuan(): BelongsTo
     {
         return $this->belongsTo(Pengajuan::class, 'pengajuan_id');
     }
 
+    /**
+     * Relasi ke pengguna (admin / mahasiswa) yang melakukan aksi / perubahan status.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Alias relasi pelaku perubahan status untuk kejelasan konteks.
+     */
     public function pelaku(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

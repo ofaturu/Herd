@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +15,13 @@ class Pengajuan extends Model
     protected $table = 'pengajuan';
 
     public const STATUS_DIAJUKAN = 'diajukan';
+
     public const STATUS_DIPROSES = 'diproses';
+
     public const STATUS_PERLU_PERBAIKAN = 'perlu_perbaikan';
+
     public const STATUS_DISETUJUI = 'disetujui';
+
     public const STATUS_DITOLAK = 'ditolak';
 
     public const VALID_STATUSES = [
@@ -46,18 +51,43 @@ class Pengajuan extends Model
         ];
     }
 
+    /**
+     * Relasi ke pemilik pengajuan (User/Mahasiswa).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Alias relasi ke mahasiswa untuk keterbacaan domain.
+     */
     public function mahasiswa(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Relasi ke layanan yang diajukan.
+     */
     public function layanan(): BelongsTo
     {
         return $this->belongsTo(Layanan::class, 'layanan_id');
     }
 
+    /**
+     * Relasi ke seluruh riwayat perubahan status pengajuan.
+     */
     public function riwayatStatus(): HasMany
     {
         return $this->hasMany(RiwayatStatus::class, 'pengajuan_id')->orderBy('waktu', 'asc');
+    }
+
+    /**
+     * Scope untuk memfilter berdasarkan status.
+     */
+    public function scopeStatus(Builder $query, string $status): Builder
+    {
+        return $query->where('status', $status);
     }
 }
