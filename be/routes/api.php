@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Http\Controllers\LayananController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -122,4 +123,15 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             ]);
         });
     });
+});
+// Layanan CRUD routes
+// Public endpoints (list and detail) – show only active services
+Route::get('/layanan', [LayananController::class, 'index']);
+Route::get('/layanan/{layanan}', [LayananController::class, 'show']);
+
+// Admin‑protected endpoints – require Sanctum auth and admin role
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::post('/layanan', [LayananController::class, 'store']);
+    Route::match(['put', 'patch'], '/layanan/{layanan}', [LayananController::class, 'update']);
+    Route::delete('/layanan/{layanan}', [LayananController::class, 'destroy']);
 });
