@@ -1,9 +1,10 @@
 <template>
   <div class="login-wrapper">
     <div class="login-card">
+      <!-- Card Header -->
       <div class="card-head">
-        <div class="logo-block">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="logo-block" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
             <path d="M6 12v5c3 3 9 3 12 0v-5"/>
           </svg>
@@ -14,42 +15,19 @@
         </p>
       </div>
 
-      <!-- Quick accounts (only in credentials step) -->
-      <div v-if="step === 'credentials'" class="quick-accounts" role="region" aria-label="Akun uji coba">
-        <p class="quick-label">Uji Coba Cepat</p>
-        <div class="quick-grid">
-          <button
-            id="btn-quick-budi"
-            type="button"
-            class="btn-quick"
-            @click="fillCredentials('budi.santoso@mahasiswa.test', 'password123')"
-          >Budi Santoso</button>
-          <button
-            id="btn-quick-siti"
-            type="button"
-            class="btn-quick"
-            @click="fillCredentials('siti.aminah@mahasiswa.test', 'password123')"
-          >Siti Aminah</button>
-          <button
-            id="btn-quick-admin"
-            type="button"
-            class="btn-quick btn-quick-admin"
-            @click="fillCredentials('admin@portal.test', 'password123')"
-          >Administrator</button>
-        </div>
-      </div>
-
-      <!-- Dev hint when demo OTP is available -->
-      <div v-if="step === 'otp' && devOtp" class="alert-info">
+      <!-- Dev hint when demo OTP is available (OTP step only) -->
+      <div v-if="step === 'otp' && devOtp" class="alert-info" role="status">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         <span>Akun demo terdeteksi. Kode OTP: <strong>{{ devOtp }}</strong> (Email juga telah dikirim ke Gmail).</span>
       </div>
 
+      <!-- Global Error Alert -->
       <div v-if="errorMessage" class="alert-error" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span>{{ errorMessage }}</span>
       </div>
 
+      <!-- Global Success Alert -->
       <div v-if="successMessage" class="alert-success" role="status">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         <span>{{ successMessage }}</span>
@@ -57,10 +35,16 @@
 
       <!-- Step 1: Credentials Form -->
       <form v-if="step === 'credentials'" @submit.prevent="handleSubmitLogin" class="login-form" novalidate>
+        <!-- Email Input Group -->
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
           <div class="input-wrap">
-            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span class="input-icon-box" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </span>
             <input
               id="email"
               v-model="email"
@@ -68,38 +52,47 @@
               placeholder="nama@mahasiswa.test"
               autocomplete="email"
               required
-              class="form-input input-with-icon"
+              class="form-input"
               :class="{ 'input-error': fieldErrors.email }"
             />
           </div>
           <span v-if="fieldErrors.email" class="field-err">{{ fieldErrors.email[0] }}</span>
         </div>
 
+        <!-- Password Input Group -->
         <div class="form-group">
           <label for="password" class="form-label">Kata Sandi</label>
           <div class="input-wrap">
-            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="input-icon-box" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
             <input
               id="password"
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
-              placeholder="••••••••"
+              placeholder="••••••••••••"
               autocomplete="current-password"
               required
-              class="form-input input-with-icon"
+              class="form-input form-input-password"
               :class="{ 'input-error': fieldErrors.password }"
             />
             <button
               type="button"
-              class="btn-eye"
+              class="btn-toggle-password"
               :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
               @click="showPassword = !showPassword"
-            >{{ showPassword ? 'Sembunyikan' : 'Tampilkan' }}</button>
+            >
+              {{ showPassword ? 'Sembunyikan' : 'Tampilkan' }}
+            </button>
           </div>
           <span v-if="fieldErrors.password" class="field-err">{{ fieldErrors.password[0] }}</span>
         </div>
 
-        <button id="btn-login" type="submit" :disabled="loading" class="btn btn-primary btn-block">
+        <!-- Submit Button -->
+        <button id="btn-login" type="submit" :disabled="loading" class="btn btn-primary btn-submit">
           <span v-if="loading" class="spinner" aria-hidden="true"></span>
           <span>{{ loading ? 'Mengirim Kode OTP...' : 'Masuk' }}</span>
         </button>
@@ -126,7 +119,7 @@
           <span class="otp-hint">Periksa kotak masuk atau spam pada email Anda.</span>
         </div>
 
-        <button id="btn-verify-otp" type="submit" :disabled="loading || otpCode.length < 6" class="btn btn-primary btn-block">
+        <button id="btn-verify-otp" type="submit" :disabled="loading || otpCode.length < 6" class="btn btn-primary btn-submit">
           <span v-if="loading" class="spinner" aria-hidden="true"></span>
           <span>{{ loading ? 'Memverifikasi...' : 'Verifikasi & Masuk' }}</span>
         </button>
@@ -150,6 +143,7 @@
         </div>
       </form>
 
+      <!-- Card Footer Links -->
       <div class="card-links">
         <NuxtLink to="/daftar" class="link-minor">Belum punya akun? Daftar di sini</NuxtLink>
         <span class="link-separator" aria-hidden="true">·</span>
@@ -192,13 +186,6 @@ onMounted(async () => {
     else if (user) router.push('/mahasiswa')
   }
 })
-
-const fillCredentials = (em: string, pw: string) => {
-  email.value        = em
-  password.value     = pw
-  errorMessage.value = ''
-  fieldErrors.value  = {}
-}
 
 const handleSubmitLogin = async () => {
   loading.value        = true
@@ -301,232 +288,326 @@ const resetToCredentials = () => {
 </script>
 
 <style scoped>
+/* ─────────────────────────────────────────────
+   Page Layout & Wrapper
+───────────────────────────────────────────── */
 .login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 160px);
-  padding: 2rem 1rem;
+  padding: 2.5rem 1rem;
 }
 
 .login-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 430px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 2.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Header */
-.card-head { text-align: center; margin-bottom: 1.5rem; }
+/* ─────────────────────────────────────────────
+   Card Header
+───────────────────────────────────────────── */
+.card-head {
+  text-align: center;
+  margin-bottom: 24px;
+}
 
 .logo-block {
   width: 48px;
   height: 48px;
   border-radius: var(--radius);
-  background: var(--primary);
-  color: #fff;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 18px -4px rgba(59, 130, 246, 0.4);
 }
 
 .card-title {
   font-size: 1.45rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 0.35rem;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
 }
 
 .card-desc {
   font-size: 0.875rem;
   color: var(--text-muted);
   line-height: 1.45;
+  margin: 0;
 }
 
-/* Quick accounts */
-.quick-accounts {
-  background: color-mix(in srgb, var(--primary) 6%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.85rem;
-  margin-bottom: 1.25rem;
-}
-
-.quick-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-}
-
-.btn-quick {
-  background: var(--bg-subtle, var(--border-subtle));
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-weight: 500;
-  padding: 0.45rem 0.5rem;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.btn-quick:hover {
-  background: var(--border);
-  color: var(--text);
-}
-
-.btn-quick-admin {
-  grid-column: span 2;
-}
-
-/* Alerts */
+/* ─────────────────────────────────────────────
+   Alerts
+───────────────────────────────────────────── */
 .alert-error {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: var(--radius-sm);
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
   background: color-mix(in srgb, var(--danger) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 32%, transparent);
   color: var(--danger);
   font-size: 0.85rem;
-  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.alert-error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .alert-info {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
   color: var(--primary-text);
   font-size: 0.82rem;
-  margin-bottom: 1.25rem;
-  line-height: 1.4;
+  line-height: 1.45;
+  margin-bottom: 20px;
+}
+
+.alert-info svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .alert-success {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: var(--radius-sm);
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
   background: color-mix(in srgb, var(--success) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 32%, transparent);
   color: var(--success);
   font-size: 0.85rem;
-  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
 }
 
-/* Form */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.15rem;
-}
-
-.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
-
-.text-center { text-align: center; }
-
-.input-wrap { position: relative; display: flex; align-items: center; }
-
-.input-icon {
-  position: absolute;
-  left: 0.75rem;
-  color: var(--text-dim);
-  pointer-events: none;
+.alert-success svg {
   flex-shrink: 0;
 }
 
-.input-with-icon { padding-left: 2.25rem; }
+/* ─────────────────────────────────────────────
+   Form Structure & Spacing
+───────────────────────────────────────────── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────────
+   Input Wrapper & Icon Alignment
+───────────────────────────────────────────── */
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon-box {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  pointer-events: none;
+  z-index: 2;
+  transition: color 0.15s ease;
+}
+
+.input-wrap:focus-within .input-icon-box {
+  color: var(--primary);
+}
 
 .form-input {
   width: 100%;
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  height: 46px;
+  padding: 0 14px 0 44px;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.form-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.85;
+}
+
+.form-input:hover:not(:focus):not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .form-input:focus {
   outline: none;
+  background-color: var(--surface);
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
 }
 
-.input-error {
+.form-input.input-error {
   border-color: var(--danger) !important;
 }
 
-.field-err { font-size: 0.75rem; color: var(--danger); }
-
-.otp-field {
-  font-size: 1.85rem !important;
-  font-weight: 800;
-  letter-spacing: 0.45em;
-  text-align: center;
-  padding: 0.75rem 0.5rem !important;
-  font-family: monospace;
+.form-input.input-error:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent) !important;
 }
 
-.otp-hint {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  text-align: center;
-  margin-top: 0.25rem;
+.form-input-password {
+  padding-right: 92px;
 }
 
-.btn-eye {
+/* ─────────────────────────────────────────────
+   Password Toggle Button
+───────────────────────────────────────────── */
+.btn-toggle-password {
   position: absolute;
-  right: 0.6rem;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   background: transparent;
   border: none;
-  color: var(--text-dim);
-  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  padding: 0.2rem 0.3rem;
-  border-radius: 4px;
-  transition: color 0.15s;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+  user-select: none;
+  line-height: 1;
 }
-.btn-eye:hover { color: var(--text); }
 
-.btn-block {
+.btn-toggle-password:hover {
+  color: var(--text);
+  background-color: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.btn-toggle-password:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.btn-toggle-password:active {
+  transform: translateY(-50%) scale(0.97);
+}
+
+.field-err {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 6px;
+  line-height: 1.25;
+}
+
+/* ─────────────────────────────────────────────
+   Submit Button
+───────────────────────────────────────────── */
+.btn-submit {
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.25rem;
-  font-size: 0.92rem;
+  height: 46px;
+  margin-top: 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px -2px rgba(59, 130, 246, 0.4);
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  box-shadow: 0 6px 18px -2px rgba(59, 130, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px -1px rgba(59, 130, 246, 0.35);
+}
+
+.btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────────
+   OTP Field & Actions
+───────────────────────────────────────────── */
+.otp-field {
+  font-size: 1.75rem !important;
+  font-weight: 800;
+  letter-spacing: 0.4em;
+  text-align: center;
+  height: 52px;
+  padding: 0 1rem !important;
+  font-family: monospace;
+}
+
+.otp-hint {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 8px;
 }
 
 .otp-action-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 0.5rem;
+  padding-top: 14px;
 }
 
 .btn-text-action {
@@ -536,32 +617,113 @@ const resetToCredentials = () => {
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 0.25rem 0.4rem;
+  padding: 4px 6px;
   border-radius: 4px;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.btn-text-action:hover:not(:disabled) {
+  color: var(--text);
+  text-decoration: underline;
 }
 
 .btn-text-action:disabled {
   color: var(--text-dim);
   cursor: not-allowed;
+  text-decoration: none;
 }
 
-/* Footer links */
+/* ─────────────────────────────────────────────
+   Card Footer Links
+───────────────────────────────────────────── */
 .card-links {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 1.5rem;
-  font-size: 0.78rem;
+  gap: 0.45rem;
+  margin-top: 24px;
+  font-size: 0.8125rem;
 }
 
 .link-minor {
   color: var(--text-dim);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
-a.link-minor:hover { color: var(--primary); text-decoration: underline; }
 
-.link-separator { color: var(--text-dim); }
+a.link-minor:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.link-separator {
+  color: var(--text-dim);
+}
+
+/* ─────────────────────────────────────────────
+   Responsive Design
+───────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .login-wrapper {
+    padding: 1.5rem 1rem;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .card-head {
+    margin-bottom: 20px;
+  }
+
+  .logo-block {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-input {
+    height: 44px;
+    font-size: 0.875rem;
+    padding-left: 42px;
+  }
+
+  .form-input-password {
+    padding-right: 86px;
+  }
+
+  .input-icon-box {
+    left: 12px;
+  }
+
+  .btn-submit {
+    height: 44px;
+    font-size: 0.9rem;
+  }
+
+  .card-links {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .link-separator {
+    display: none;
+  }
+}
 </style>
