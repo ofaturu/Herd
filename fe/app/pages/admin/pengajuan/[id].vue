@@ -577,18 +577,18 @@ onMounted(() => {
 }
 
 .admin-current-note {
-  background: rgba(245, 158, 11, 0.1);
+  background: var(--alert-warning-bg);
   border-left: 3px solid var(--warning);
   padding: 0.85rem 1rem;
   border-radius: 0 8px 8px 0;
-  color: #fde68a;
+  color: var(--alert-warning-text);
   font-size: 0.88rem;
 }
 
 /* Action Card */
 .action-card {
-  border-color: rgba(59, 130, 246, 0.35);
-  background: rgba(19, 27, 46, 0.95);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  background: var(--surface-card);
 }
 
 .action-card-title {
@@ -611,7 +611,7 @@ onMounted(() => {
 }
 
 .status-radio-label {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 0.9rem;
@@ -623,13 +623,14 @@ onMounted(() => {
 }
 
 .status-radio-label:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-hover);
+  border-color: color-mix(in srgb, var(--text) 20%, transparent);
 }
 
 .status-selected {
   border-color: var(--primary) !important;
-  background: rgba(37, 99, 235, 0.15) !important;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .radio-badge {
@@ -745,14 +746,14 @@ onMounted(() => {
   box-shadow: 0 0 0 2px var(--border-color);
 }
 
-.point-diajukan { background: #06b6d4; }
-.point-diproses { background: #3b82f6; }
-.point-perbaikan { background: #f59e0b; }
-.point-selesai { background: #10b981; }
-.point-ditolak { background: #ef4444; }
+.point-diajukan { background: var(--info); }
+.point-diproses { background: var(--primary); }
+.point-perbaikan { background: var(--warning); }
+.point-selesai { background: var(--success); }
+.point-ditolak { background: var(--danger); }
 
 .timeline-content {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 10px;
   padding: 0.85rem 1rem;
@@ -787,7 +788,7 @@ onMounted(() => {
 
 .hist-note {
   font-size: 0.82rem;
-  color: #fde047;
+  color: var(--alert-warning-title);
   font-style: italic;
   margin-bottom: 0.35rem;
 }
@@ -808,33 +809,34 @@ onMounted(() => {
 }
 
 .badge-diajukan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--badge-diajukan-bg);
+  color: var(--badge-diajukan-text);
+  border: 1px solid var(--badge-diajukan-border);
 }
 
 .badge-diproses {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--badge-diproses-bg);
+  color: var(--badge-diproses-text);
+  border: 1px solid var(--badge-diproses-border);
 }
 
 .badge-perbaikan {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: var(--badge-perbaikan-bg);
+  color: var(--badge-perbaikan-text);
+  border: 1px solid var(--badge-perbaikan-border);
 }
 
-.badge-selesai {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.badge-selesai,
+.badge-disetujui {
+  background: var(--badge-selesai-bg);
+  color: var(--badge-selesai-text);
+  border: 1px solid var(--badge-selesai-border);
 }
 
 .badge-ditolak {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--badge-ditolak-bg);
+  color: var(--badge-ditolak-text);
+  border: 1px solid var(--badge-ditolak-border);
 }
 
 .spinner {

@@ -69,7 +69,7 @@ onMounted(async () => {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 3.5rem 2.5rem;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-card);
   backdrop-filter: blur(12px);
 }
 
@@ -80,8 +80,8 @@ onMounted(async () => {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--primary-light);
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
   margin-bottom: 1.5rem;
 }
 
@@ -90,10 +90,8 @@ onMounted(async () => {
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 30%, #94a3b8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--text);
+  letter-spacing: -0.02em;
 }
 
 .hero-desc {
@@ -122,7 +120,7 @@ onMounted(async () => {
 }
 
 .feature-item {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   padding: 1.25rem;

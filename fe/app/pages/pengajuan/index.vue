@@ -370,11 +370,11 @@ onMounted(() => {
 }
 
 .pengajuan-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-hover);
 }
 
 .row-warning td {
-  background: rgba(245, 158, 11, 0.05);
+  background: color-mix(in srgb, var(--warning) 6%, transparent);
 }
 
 .ticket-pill {
@@ -382,10 +382,10 @@ onMounted(() => {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--primary-light);
-  background: rgba(59, 130, 246, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   padding: 0.25rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 .service-cell {
@@ -414,7 +414,7 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.8rem;
-  color: #fde047;
+  color: var(--alert-warning-title);
 }
 
 .text-dim {
@@ -428,13 +428,13 @@ onMounted(() => {
   text-decoration: none;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
   transition: all 0.2s ease;
 }
 
 .btn-action:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 /* Status Badges */
@@ -447,33 +447,34 @@ onMounted(() => {
 }
 
 .badge-diajukan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--badge-diajukan-bg);
+  color: var(--badge-diajukan-text);
+  border: 1px solid var(--badge-diajukan-border);
 }
 
 .badge-diproses {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--badge-diproses-bg);
+  color: var(--badge-diproses-text);
+  border: 1px solid var(--badge-diproses-border);
 }
 
 .badge-perbaikan {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: var(--badge-perbaikan-bg);
+  color: var(--badge-perbaikan-text);
+  border: 1px solid var(--badge-perbaikan-border);
 }
 
-.badge-selesai {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.badge-selesai,
+.badge-disetujui {
+  background: var(--badge-selesai-bg);
+  color: var(--badge-selesai-text);
+  border: 1px solid var(--badge-selesai-border);
 }
 
 .badge-ditolak {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--badge-ditolak-bg);
+  color: var(--badge-ditolak-text);
+  border: 1px solid var(--badge-ditolak-border);
 }
 
 .state-container {

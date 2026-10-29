@@ -135,7 +135,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
-import { useRuntimeConfig } from '#app'
+import { useRuntimeConfig, useHead } from '#app'
 
 const { user, fetchUser, logout } = useAuth()
 const config = useRuntimeConfig()
@@ -143,15 +143,29 @@ const storageBase = `${(config.public.apiBaseUrl as string || 'http://localhost:
 
 const theme = ref<'dark' | 'light'>('dark')
 
+useHead({
+  htmlAttrs: {
+    'data-theme': theme
+  }
+})
+
 onMounted(async () => {
   const saved = localStorage.getItem('portal-theme') as 'dark' | 'light' | null
-  if (saved === 'light' || saved === 'dark') theme.value = saved
+  if (saved === 'light' || saved === 'dark') {
+    theme.value = saved
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    theme.value = 'light'
+  }
+  document.documentElement.setAttribute('data-theme', theme.value)
   await fetchUser()
 })
 
 const toggleTheme = () => {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
-  localStorage.setItem('portal-theme', theme.value)
+  if (import.meta.client) {
+    document.documentElement.setAttribute('data-theme', theme.value)
+    localStorage.setItem('portal-theme', theme.value)
+  }
 }
 
 const userFotoUrl = computed(() => {
@@ -177,6 +191,7 @@ const handleLogout = async () => {
    Design tokens – dark (default)
 ───────────────────────────────────────────── */
 :root,
+html[data-theme="dark"],
 [data-theme="dark"] {
   --bg:           #0e1117;
   --bg-subtle:    #161b25;
@@ -198,6 +213,38 @@ const handleLogout = async () => {
   --danger:       #ef4444;
   --info:         #06b6d4;
 
+  /* Semantic status badges (Dark mode) */
+  --badge-diajukan-bg:     rgba(6, 182, 212, 0.15);
+  --badge-diajukan-text:   #67e8f9;
+  --badge-diajukan-border: rgba(6, 182, 212, 0.35);
+
+  --badge-diproses-bg:     rgba(59, 130, 246, 0.15);
+  --badge-diproses-text:   #93c5fd;
+  --badge-diproses-border: rgba(59, 130, 246, 0.35);
+
+  --badge-perbaikan-bg:     rgba(245, 158, 11, 0.18);
+  --badge-perbaikan-text:   #fde047;
+  --badge-perbaikan-border: rgba(245, 158, 11, 0.4);
+
+  --badge-selesai-bg:     rgba(16, 185, 129, 0.15);
+  --badge-selesai-text:   #6ee7b7;
+  --badge-selesai-border: rgba(16, 185, 129, 0.35);
+
+  --badge-ditolak-bg:     rgba(239, 68, 68, 0.15);
+  --badge-ditolak-text:   #fca5a5;
+  --badge-ditolak-border: rgba(239, 68, 68, 0.35);
+
+  /* Semantic alert boxes (Dark mode) */
+  --alert-warning-bg:     rgba(245, 158, 11, 0.12);
+  --alert-warning-border: rgba(245, 158, 11, 0.3);
+  --alert-warning-title:  #fbbf24;
+  --alert-warning-text:   #fef3c7;
+  --alert-warning-box:    rgba(0, 0, 0, 0.3);
+
+  --shadow-card:     0 12px 32px -10px rgba(0, 0, 0, 0.5);
+  --shadow-dropdown: 0 16px 36px -8px rgba(0, 0, 0, 0.6);
+  --overlay-bg:      rgba(0, 0, 0, 0.75);
+
   --radius-sm:    6px;
   --radius:       10px;
   --radius-lg:    16px;
@@ -207,27 +254,69 @@ const handleLogout = async () => {
 /* ─────────────────────────────────────────────
    Design tokens – light
 ───────────────────────────────────────────── */
+html[data-theme="light"],
 [data-theme="light"] {
-  --bg:           #f4f6fb;
-  --bg-subtle:    #eef1f7;
-  --surface:      rgba(255,255,255,0.92);
-  --surface-hover:rgba(255,255,255,1);
-  --border:       rgba(0,0,0,0.1);
-  --border-subtle:rgba(0,0,0,0.06);
+  --bg:           #f8fafc;
+  --bg-subtle:    #f1f5f9;
+  --surface:      #ffffff;
+  --surface-hover:#f8fafc;
+  --border:       #e2e8f0;
+  --border-subtle:#edf2f7;
 
   --primary:      #2563eb;
   --primary-dark: #1d4ed8;
-  --primary-text: #1e40af;
+  --primary-text: #1d4ed8;
 
-  --text:         #111827;
-  --text-muted:   #4b5563;
-  --text-dim:     #9ca3af;
+  --text:         #0f172a;
+  --text-muted:   #475569;
+  --text-dim:     #64748b;
+
+  --success:      #16a34a;
+  --warning:      #d97706;
+  --danger:       #dc2626;
+  --info:         #0284c7;
+
+  /* Semantic status badges (Light mode - WCAG AA compliant 4.5:1+) */
+  --badge-diajukan-bg:     #e0f2fe;
+  --badge-diajukan-text:   #0369a1;
+  --badge-diajukan-border: #bae6fd;
+
+  --badge-diproses-bg:     #eff6ff;
+  --badge-diproses-text:   #1d4ed8;
+  --badge-diproses-border: #bfdbfe;
+
+  --badge-perbaikan-bg:     #fef3c7;
+  --badge-perbaikan-text:   #92400e;
+  --badge-perbaikan-border: #fde68a;
+
+  --badge-selesai-bg:     #dcfce7;
+  --badge-selesai-text:   #15803d;
+  --badge-selesai-border: #bbf7d0;
+
+  --badge-ditolak-bg:     #fee2e2;
+  --badge-ditolak-text:   #b91c1c;
+  --badge-ditolak-border: #fecaca;
+
+  /* Semantic alert boxes (Light mode) */
+  --alert-warning-bg:     #fffbeb;
+  --alert-warning-border: #fde68a;
+  --alert-warning-title:  #92400e;
+  --alert-warning-text:   #78350f;
+  --alert-warning-box:    #fef3c7;
+
+  --shadow-card:     0 4px 20px -2px rgba(15, 23, 42, 0.08);
+  --shadow-dropdown: 0 10px 25px -4px rgba(15, 23, 42, 0.12);
+  --overlay-bg:      rgba(15, 23, 42, 0.5);
 }
 
 /* ─────────────────────────────────────────────
    Compatibility aliases for page-level CSS
 ───────────────────────────────────────────── */
-:root {
+:root,
+html[data-theme="dark"],
+html[data-theme="light"],
+[data-theme="dark"],
+[data-theme="light"] {
   --bg-base:            var(--bg);
   --surface-card:       var(--surface);
   --surface-card-hover: var(--surface-hover);
@@ -261,8 +350,21 @@ input, select, textarea {
   font-family: inherit;
 }
 
+option {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
 input::placeholder, textarea::placeholder {
   color: var(--text-dim);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* ─────────────────────────────────────────────
@@ -533,21 +635,26 @@ input::placeholder, textarea::placeholder {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
-/* Status badges */
-.badge {
+/* Status badges (Shared across all pages) */
+.badge,
+.status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.6rem;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: capitalize;
   border: 1px solid transparent;
 }
-.badge-diajukan  { background: color-mix(in srgb, var(--info) 15%, transparent);    color: var(--info);    border-color: color-mix(in srgb, var(--info) 30%, transparent); }
-.badge-diproses  { background: color-mix(in srgb, var(--primary) 15%, transparent); color: var(--primary-text); border-color: color-mix(in srgb, var(--primary) 30%, transparent); }
-.badge-perbaikan { background: color-mix(in srgb, var(--warning) 15%, transparent); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
-.badge-selesai   { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
-.badge-ditolak   { background: color-mix(in srgb, var(--danger) 15%, transparent);  color: var(--danger);  border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+.badge-diajukan  { background: var(--badge-diajukan-bg);  color: var(--badge-diajukan-text);  border-color: var(--badge-diajukan-border); }
+.badge-diproses  { background: var(--badge-diproses-bg);  color: var(--badge-diproses-text);  border-color: var(--badge-diproses-border); }
+.badge-perbaikan { background: var(--badge-perbaikan-bg); color: var(--badge-perbaikan-text); border-color: var(--badge-perbaikan-border); }
+.badge-selesai,
+.badge-disetujui { background: var(--badge-selesai-bg);   color: var(--badge-selesai-text);   border-color: var(--badge-selesai-border); }
+.badge-ditolak   { background: var(--badge-ditolak-bg);   color: var(--badge-ditolak-text);   border-color: var(--badge-ditolak-border); }
 
 /* Spinner */
 .spinner {

@@ -306,7 +306,7 @@ const resetToCredentials = () => {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 32px;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow-card);
   backdrop-filter: blur(12px);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -480,7 +480,7 @@ const resetToCredentials = () => {
 }
 
 .form-input:hover:not(:focus):not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: color-mix(in srgb, var(--text) 22%, transparent);
 }
 
 .form-input:focus {

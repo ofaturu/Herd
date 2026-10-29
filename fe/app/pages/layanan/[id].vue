@@ -451,10 +451,10 @@ onMounted(() => {
 .form-textarea, .form-input {
   width: 100%;
   padding: 0.75rem 0.9rem;
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.88rem;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -463,7 +463,7 @@ onMounted(() => {
 .form-textarea:focus, .form-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
 }
 
 .field-help {
@@ -484,15 +484,15 @@ onMounted(() => {
 }
 
 .alert-error {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  color: var(--danger);
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #6ee7b7;
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  color: var(--success);
 }
 
 .spinner {

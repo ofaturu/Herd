@@ -354,18 +354,18 @@ const formatDate = (dateStr: string) => {
 .alert-body h4 {
   font-size: 1rem;
   font-weight: 700;
-  color: #fbbf24;
+  color: var(--alert-warning-title);
   margin-bottom: 0.25rem;
 }
 
 .alert-body p {
   font-size: 0.875rem;
-  color: #fef3c7;
+  color: var(--alert-warning-text);
 }
 
 .btn-warning-action {
-  background: #f59e0b;
-  color: #000;
+  background: var(--warning);
+  color: #fff;
   padding: 0.55rem 1.1rem;
   border-radius: 10px;
   font-size: 0.85rem;
@@ -375,7 +375,7 @@ const formatDate = (dateStr: string) => {
 }
 
 .btn-warning-action:hover {
-  background: #d97706;
+  filter: brightness(0.92);
 }
 
 .recent-section {
@@ -423,7 +423,7 @@ const formatDate = (dateStr: string) => {
 }
 
 .pengajuan-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   padding: 1.35rem;
@@ -433,8 +433,8 @@ const formatDate = (dateStr: string) => {
 }
 
 .pengajuan-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--surface-hover);
+  border-color: color-mix(in srgb, var(--text) 20%, transparent);
   transform: translateY(-2px);
 }
 
@@ -449,7 +449,7 @@ const formatDate = (dateStr: string) => {
   font-family: monospace;
   font-size: 0.78rem;
   color: var(--text-dim);
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
 }
@@ -468,7 +468,7 @@ const formatDate = (dateStr: string) => {
 }
 
 .admin-note-preview {
-  background: rgba(245, 158, 11, 0.1);
+  background: var(--alert-warning-box);
   border-left: 3px solid var(--warning);
   padding: 0.5rem 0.75rem;
   border-radius: 0 6px 6px 0;
@@ -478,13 +478,13 @@ const formatDate = (dateStr: string) => {
 .note-label {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #fbbf24;
+  color: var(--alert-warning-title);
   display: block;
 }
 
 .note-text {
   font-size: 0.8rem;
-  color: #fde68a;
+  color: var(--alert-warning-text);
 }
 
 .card-actions {
@@ -514,33 +514,34 @@ const formatDate = (dateStr: string) => {
 }
 
 .badge-diajukan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--badge-diajukan-bg);
+  color: var(--badge-diajukan-text);
+  border: 1px solid var(--badge-diajukan-border);
 }
 
 .badge-diproses {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--badge-diproses-bg);
+  color: var(--badge-diproses-text);
+  border: 1px solid var(--badge-diproses-border);
 }
 
 .badge-perbaikan {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: var(--badge-perbaikan-bg);
+  color: var(--badge-perbaikan-text);
+  border: 1px solid var(--badge-perbaikan-border);
 }
 
-.badge-selesai {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.badge-selesai,
+.badge-disetujui {
+  background: var(--badge-selesai-bg);
+  color: var(--badge-selesai-text);
+  border: 1px solid var(--badge-selesai-border);
 }
 
 .badge-ditolak {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--badge-ditolak-bg);
+  color: var(--badge-ditolak-text);
+  border: 1px solid var(--badge-ditolak-border);
 }
 
 .empty-state {

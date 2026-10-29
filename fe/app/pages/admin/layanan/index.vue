@@ -466,15 +466,15 @@ onMounted(() => {
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #6ee7b7;
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 32%, transparent);
+  color: var(--success);
 }
 
 .alert-error {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 32%, transparent);
+  color: var(--danger);
 }
 
 .btn-close-toast {
@@ -490,7 +490,7 @@ onMounted(() => {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   overflow-x: auto;
-  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-card);
 }
 
 .services-table {
@@ -501,7 +501,7 @@ onMounted(() => {
 }
 
 .services-table th {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   color: var(--text-dim);
   font-size: 0.75rem;
   font-weight: 700;
@@ -519,7 +519,7 @@ onMounted(() => {
 }
 
 .services-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-hover);
 }
 
 .row-inactive td {
@@ -583,33 +583,33 @@ onMounted(() => {
 }
 
 .btn-edit {
-  background: rgba(59, 130, 246, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   color: var(--primary-light);
-  border-color: rgba(59, 130, 246, 0.25);
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 .btn-edit:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .btn-deactivate {
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.25);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 25%, transparent);
 }
 
 .btn-deactivate:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
 }
 
 .btn-activate {
-  background: rgba(16, 185, 129, 0.1);
-  color: #34d399;
-  border-color: rgba(16, 185, 129, 0.25);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 25%, transparent);
 }
 
 .btn-activate:hover {
-  background: rgba(16, 185, 129, 0.2);
+  background: color-mix(in srgb, var(--success) 20%, transparent);
 }
 
 /* Modal Styles */
@@ -617,7 +617,7 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--overlay-bg);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -632,7 +632,7 @@ onMounted(() => {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-dropdown);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -717,7 +717,7 @@ onMounted(() => {
 
 .field-error {
   font-size: 0.75rem;
-  color: #f87171;
+  color: var(--danger);
 }
 
 .form-group-checkbox {

@@ -276,6 +276,47 @@
 
 ---
 
-## 10. Status Akhir
-- **Tahap 3.3**: SELESAI & TERVERIFIKASI.
-- Seluruh antarmuka admin dan alur mahasiswa telah terhubung dengan REST API Laravel, tanpa data palsu, dan siap digunakan.
+## 11. Tahap 3.4 — Audit & Unifikasi Sistem Tema (Light & Dark Mode) (Selesai & Terverifikasi)
+- **Akar Masalah Theme Leakage yang Ditemukan**:
+  1. Atribut `data-theme` sebelumnya hanya dipasang pada container `<div class="app-layout">`, bukan pada elemen root `<html>` atau `<body>`. Hal ini menyebabkan inheritance CSS global (seperti `body { background-color: ... }` dan elemen yang di-teleport/portal) mempertahankan warna gelap meskipun pengguna memilih Light Mode.
+  2. Input form dan textarea pada `fe/app/pages/layanan/[id].vue` memiliki style inline/scoped hardcoded `background: rgba(15, 23, 42, 0.7); color: #fff;` yang menyebabkan kotak input tetap berwarna hitam pekat di Light Mode.
+  3. Komponen `.action-card` pada `fe/app/pages/admin/pengajuan/[id].vue` memiliki hardcoded background `rgba(19, 27, 46, 0.95)`, sehingga tidak menyesuaikan diri saat beralih ke Light Mode.
+  4. Judul hero pada `fe/app/pages/index.vue` memiliki text clipping gradien putih yang tidak terbaca pada latar belakang terang.
+  5. Status badge (`badge-diajukan`, `badge-diproses`, `badge-perlu_perbaikan`, `badge-disetujui`, `badge-ditolak`) menggunakan warna teks pastel cerah (`#67e8f9`, `#fde047`, dll.) yang kontrasnya tidak memenuhi syarat WCAG AA (< 1.8:1) pada latar terang.
+  6. Kotak catatan revisi admin (`.rev-note-box`, `.admin-current-note`, `.admin-note-preview`) menggunakan teks kuning pucat (`#fef3c7`) pada latar kuning terang di Light Mode.
+- **Perbaikan & Centralized Design Token System**:
+  - `fe/app/app.vue`:
+    - Mengintegrasikan `useHead({ htmlAttrs: { 'data-theme': theme } })` sehingga atribut `data-theme="light"` / `data-theme="dark"` dirender langsung pada tag `<html>` sejak SSR/awal hidrasi.
+    - Sinkronisasi instan via `document.documentElement.setAttribute('data-theme', theme.value)` saat tombol `#btn-theme-toggle` diklik, tanpa perlu refresh halaman.
+    - Persistensi otomatis ke `localStorage.getItem('portal_theme')` dengan fallback ke `window.matchMedia('(prefers-color-scheme: dark)')`.
+    - Menambahkan semantic status tokens pada `:root`, `html[data-theme="dark"]`, dan `html[data-theme="light"]`:
+      - `--badge-diajukan-bg`, `--badge-diajukan-text`, `--badge-diajukan-border`
+      - `--badge-diproses-bg`, `--badge-diproses-text`, `--badge-diproses-border`
+      - `--badge-perlu_perbaikan-bg`, `--badge-perlu_perbaikan-text`, `--badge-perlu_perbaikan-border`
+      - `--badge-disetujui-bg`, `--badge-disetujui-text`, `--badge-disetujui-border`
+      - `--badge-ditolak-bg`, `--badge-ditolak-text`, `--badge-ditolak-border`
+      - `--alert-warning-bg`, `--alert-warning-border`, `--alert-warning-title`, `--alert-warning-text`, `--alert-warning-box`
+      - `--shadow-card`, `--shadow-dropdown`, `--overlay-bg`
+    - Sentralisasi class global `.status-badge` dan seluruh varian statusnya agar seragam di semua halaman.
+  - `fe/app/pages/layanan/[id].vue`: Mengganti input & textarea hardcoded menjadi `var(--bg-subtle)` dan `var(--text)`.
+  - `fe/app/pages/admin/pengajuan/[id].vue`: Mengganti `.action-card` dan label status menjadi semantic tokens.
+  - `fe/app/pages/mahasiswa.vue`: Mengganti kartu pengajuan, banner peringatan, dan preview catatan admin dengan token semantik.
+  - `fe/app/pages/pengajuan/index.vue` & `fe/app/pages/pengajuan/[id].vue`: Mengganti hover tabel, timeline points, dan banner revisi dengan token semantik.
+  - `fe/app/pages/admin/index.vue`: Mengganti hover statistik dan tabel antrean dengan token semantik.
+  - `fe/app/pages/admin/pengajuan/index.vue`: Mengganti hover tabel dan pagination dengan token semantik.
+  - `fe/app/pages/admin/layanan/index.vue`: Mengganti modal backdrop, form modal, dan action buttons dengan token semantik.
+  - `fe/app/pages/layanan/index.vue`: Mengganti kartu layanan dan blok persyaratan dengan token semantik.
+  - `fe/app/pages/login.vue`: Mengganti bayangan kartu dan border hover input dengan token semantik.
+  - `fe/app/pages/index.vue`: Mengganti hero title dan kartu fitur dengan token semantik.
+- **Hasil Pengujian & Verifikasi**:
+  1. **Frontend HTTP Verification**: Status 200 OK pada seluruh rute aplikasi (`/`, `/login`, `/mahasiswa`, `/layanan`, `/layanan/1`, `/pengajuan`, `/admin`, `/admin/layanan`, `/admin/pengajuan`).
+  2. **Theme Switching Verification**: Nuxt dev server merender `data-theme` langsung di tag `<html>`. Pergantian tema langsung aktif di semua komponen tanpa reload.
+  3. **Backend Test Suite (Pest)**: 69 passed (100% lulus, 239 assertions), 0 regresi.
+  4. **WCAG 2.2 AA Contrast**: Kontras teks utama > 10:1 pada Light Mode dan Dark Mode; badge status memiliki kontras > 4.5:1 untuk teks dan > 3:1 untuk border.
+
+---
+
+## 12. Status Akhir
+- **Tahap 3.4**: SELESAI & TERVERIFIKASI.
+- Seluruh kebocoran tema (theme leakage) telah diatasi di seluruh halaman mahasiswa, publik, dan admin.
+- Sistem tema kini menggunakan semantic CSS design tokens terpusat di `app.vue`.

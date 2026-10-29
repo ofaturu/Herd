@@ -290,19 +290,19 @@ onMounted(() => {
 .rev-content h3 {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fbbf24;
+  color: var(--alert-warning-title);
   margin-bottom: 0.35rem;
 }
 
 .rev-desc {
   font-size: 0.9rem;
-  color: #fef3c7;
+  color: var(--alert-warning-text);
   margin-bottom: 0.85rem;
 }
 
 .rev-note-box {
-  background: rgba(0, 0, 0, 0.25);
-  border-left: 3px solid #f59e0b;
+  background: var(--alert-warning-box);
+  border-left: 3px solid var(--warning);
   border-radius: 0 8px 8px 0;
   padding: 0.75rem 1rem;
 }
@@ -310,7 +310,7 @@ onMounted(() => {
 .rev-note-box strong {
   display: block;
   font-size: 0.78rem;
-  color: #fde047;
+  color: var(--alert-warning-title);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 0.25rem;
@@ -509,14 +509,14 @@ onMounted(() => {
   box-shadow: 0 0 0 2px var(--border-color);
 }
 
-.point-diajukan { background: #06b6d4; }
-.point-diproses { background: #3b82f6; }
-.point-perbaikan { background: #f59e0b; }
-.point-selesai { background: #10b981; }
-.point-ditolak { background: #ef4444; }
+.point-diajukan { background: var(--info); }
+.point-diproses { background: var(--primary); }
+.point-perbaikan { background: var(--warning); }
+.point-selesai { background: var(--success); }
+.point-ditolak { background: var(--danger); }
 
 .timeline-content {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 10px;
   padding: 0.85rem 1rem;
@@ -551,7 +551,7 @@ onMounted(() => {
 
 .hist-note {
   font-size: 0.82rem;
-  color: #fde047;
+  color: var(--alert-warning-title);
   font-style: italic;
   margin-bottom: 0.35rem;
 }
@@ -564,33 +564,34 @@ onMounted(() => {
 
 /* Status Badges */
 .badge-diajukan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--badge-diajukan-bg);
+  color: var(--badge-diajukan-text);
+  border: 1px solid var(--badge-diajukan-border);
 }
 
 .badge-diproses {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--badge-diproses-bg);
+  color: var(--badge-diproses-text);
+  border: 1px solid var(--badge-diproses-border);
 }
 
 .badge-perbaikan {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: var(--badge-perbaikan-bg);
+  color: var(--badge-perbaikan-text);
+  border: 1px solid var(--badge-perbaikan-border);
 }
 
-.badge-selesai {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.badge-selesai,
+.badge-disetujui {
+  background: var(--badge-selesai-bg);
+  color: var(--badge-selesai-text);
+  border: 1px solid var(--badge-selesai-border);
 }
 
 .badge-ditolak {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--badge-ditolak-bg);
+  color: var(--badge-ditolak-text);
+  border: 1px solid var(--badge-ditolak-border);
 }
 
 .state-container {

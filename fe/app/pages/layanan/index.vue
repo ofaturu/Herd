@@ -207,13 +207,13 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-card);
 }
 
 .service-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.45);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  box-shadow: var(--shadow-dropdown);
 }
 
 .card-badge-row {
@@ -228,10 +228,10 @@ onMounted(() => {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--primary-light);
-  background: rgba(59, 130, 246, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 .est-badge {
@@ -260,7 +260,7 @@ onMounted(() => {
 }
 
 .req-section {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 10px;
   padding: 0.85rem;

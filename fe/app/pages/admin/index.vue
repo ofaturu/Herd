@@ -354,7 +354,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   padding: 1.25rem 1.5rem;
@@ -400,7 +400,7 @@ onMounted(() => {
 
 .stat-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
 }
 
 .stat-header {
@@ -523,17 +523,17 @@ onMounted(() => {
 }
 
 .admin-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-hover);
 }
 
 .ticket-code {
   font-family: monospace;
   font-size: 0.78rem;
   color: var(--primary-light);
-  background: rgba(59, 130, 246, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 .student-info-col {
@@ -571,33 +571,34 @@ onMounted(() => {
 }
 
 .badge-diajukan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--badge-diajukan-bg);
+  color: var(--badge-diajukan-text);
+  border: 1px solid var(--badge-diajukan-border);
 }
 
 .badge-diproses {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--badge-diproses-bg);
+  color: var(--badge-diproses-text);
+  border: 1px solid var(--badge-diproses-border);
 }
 
 .badge-perbaikan {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: var(--badge-perbaikan-bg);
+  color: var(--badge-perbaikan-text);
+  border: 1px solid var(--badge-perbaikan-border);
 }
 
-.badge-selesai {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.badge-selesai,
+.badge-disetujui {
+  background: var(--badge-selesai-bg);
+  color: var(--badge-selesai-text);
+  border: 1px solid var(--badge-selesai-border);
 }
 
 .badge-ditolak {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--badge-ditolak-bg);
+  color: var(--badge-ditolak-text);
+  border: 1px solid var(--badge-ditolak-border);
 }
 
 .empty-pending {
