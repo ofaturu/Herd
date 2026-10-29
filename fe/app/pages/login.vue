@@ -207,8 +207,8 @@ const handleSubmitLogin = async () => {
   fieldErrors.value    = {}
 
   try {
-    const res = await login(email.value, password.value)
-    if (res.success && res.requires_otp) {
+    const res: any = await login(email.value, password.value)
+    if (res.success && (res.requires_otp || res.data?.session_token)) {
       sessionToken.value = res.data?.session_token || ''
       maskedEmail.value  = res.data?.masked_email || email.value
       devOtp.value       = res.data?.dev_otp || null

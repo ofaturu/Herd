@@ -60,10 +60,6 @@
 
         <div class="info-readonly">
           <div class="readonly-item">
-            <span class="readonly-label">NIM</span>
-            <span class="readonly-value">{{ user?.nim || '-' }}</span>
-          </div>
-          <div class="readonly-item">
             <span class="readonly-label">Email</span>
             <span class="readonly-value">{{ user?.email || '-' }}</span>
           </div>
@@ -81,6 +77,17 @@
         <div v-if="saveError" class="alert-error-sm" role="alert">{{ saveError }}</div>
 
         <form @submit.prevent="saveProfile" class="profile-form" novalidate>
+          <div class="form-group">
+            <label for="f-nim" class="form-label">NIM</label>
+            <input
+              id="f-nim"
+              v-model="form.nim"
+              type="text"
+              class="form-input"
+              placeholder="Nomor Induk Mahasiswa"
+              maxlength="30"
+            />
+          </div>
           <div class="form-group">
             <label for="f-name" class="form-label">Nama Lengkap</label>
             <input
@@ -152,7 +159,7 @@ const fotoError     = ref('')
 const fotoFile      = ref<File | null>(null)
 const fotoPreview   = ref<string | null>(null)
 
-const form = ref({ name: '', prodi: '', no_hp: '' })
+const form = ref({ nim: '', name: '', prodi: '', no_hp: '' })
 
 const currentFotoUrl = computed(() => {
   const foto = user.value?.foto_profil as string | undefined
@@ -164,6 +171,7 @@ onMounted(async () => {
   if (!isAuthenticated()) { router.push('/login'); return }
   const u = await fetchUser()
   if (!u || u.role !== 'mahasiswa') { router.push('/login'); return }
+  form.value.nim   = (u as any).nim    || ''
   form.value.name  = u.name   || ''
   form.value.prodi = (u as any).prodi  || ''
   form.value.no_hp = (u as any).no_hp  || ''
@@ -202,6 +210,7 @@ const uploadFoto = async () => {
     if (res.success) {
       fotoSuccess.value = true
       fotoFile.value    = null
+      fotoPreview.value = null
       await fetchUser()
     } else {
       fotoError.value = res.message || 'Gagal mengunggah foto.'
@@ -219,7 +228,8 @@ const saveProfile = async () => {
   saveError.value   = ''
   try {
     const res = await api.put('/user/profile', {
-      name:  form.value.name.trim() || undefined,
+      nim:   form.value.nim.trim()   || undefined,
+      name:  form.value.name.trim()  || undefined,
       prodi: form.value.prodi.trim() || undefined,
       no_hp: form.value.no_hp.trim() || undefined,
     })

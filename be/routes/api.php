@@ -399,6 +399,7 @@ Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {
 
         $validated = $request->validate([
             'name'   => ['sometimes', 'string', 'max:255'],
+            'nim'    => ['sometimes', 'nullable', 'string', 'max:30', \Illuminate\Validation\Rule::unique('users', 'nim')->ignore($user->id)],
             'no_hp'  => ['sometimes', 'nullable', 'string', 'max:20'],
             'prodi'  => ['sometimes', 'nullable', 'string', 'max:100'],
         ]);

@@ -7,6 +7,7 @@ export interface ApiResponse<T = any> {
   data?: T
   errors?: Record<string, string[]>
   meta?: any
+  requires_otp?: boolean
 }
 
 export const useApi = () => {
@@ -91,21 +92,27 @@ export const useApi = () => {
     getToken: () => tokenCookie.value,
     postForm: async <T = any>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> => {
       const url = buildUrl(endpoint)
-      // Omit Content-Type so fetch sets multipart boundary automatically
+      // Use native fetch — $fetch can mangle FormData; native fetch sets correct multipart boundary
       const headers: Record<string, string> = { 'Accept': 'application/json' }
       if (tokenCookie.value) headers['Authorization'] = `Bearer ${tokenCookie.value}`
+      // Do NOT set Content-Type; browser sets it with the correct multipart boundary
       try {
-        const response = await $fetch<any>(url, { method: 'POST', body: formData, headers })
-        if (typeof response === 'object' && response !== null && 'success' in response) {
-          return response as ApiResponse<T>
+        const raw = await fetch(url, { method: 'POST', body: formData, headers })
+        const json = await raw.json().catch(() => ({}))
+        if (!raw.ok) {
+          const msgs = json?.errors
+            ? Object.values(json.errors as Record<string, string[]>).flat().join(' ')
+            : json?.message || `HTTP ${raw.status}`
+          return { success: false, message: msgs, errors: json?.errors }
         }
-        return { success: true, data: response }
+        if (typeof json === 'object' && json !== null && 'success' in json) {
+          return json as ApiResponse<T>
+        }
+        return { success: true, data: json }
       } catch (err: any) {
-        const errorData = err.response?._data || err.data
         return {
           success: false,
-          message: errorData?.message || err.message || 'Gagal mengunggah file.',
-          errors: errorData?.errors
+          message: err.message || 'Gagal mengunggah file.',
         }
       }
     }

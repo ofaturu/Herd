@@ -80,12 +80,18 @@
                 class="avatar-img"
                 alt="Foto profil"
               />
-              <span v-else class="avatar-initials" :class="{ 'avatar-admin': user.role === 'admin' }">
+              <span v-else class="avatar-initials">
                 {{ user.name?.charAt(0) || 'M' }}
               </span>
             </NuxtLink>
             <div v-else class="user-avatar-btn no-link">
-              <span class="avatar-initials avatar-admin">{{ user.name?.charAt(0) || 'A' }}</span>
+              <img
+                v-if="userFotoUrl"
+                :src="userFotoUrl"
+                class="avatar-img"
+                alt="Foto profil"
+              />
+              <span v-else class="avatar-initials avatar-admin">{{ user.name?.charAt(0) || 'A' }}</span>
             </div>
 
             <div class="user-info-block">
