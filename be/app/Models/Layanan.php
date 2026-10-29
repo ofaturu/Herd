@@ -22,14 +22,11 @@ class Layanan extends Model
         'is_aktif',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'persyaratan' => 'array',
-            'estimasi_hari' => 'integer',
-            'is_aktif' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'persyaratan' => 'array',
+        'estimasi_hari' => 'integer',
+        'is_aktif' => 'boolean',
+    ];
 
     /**
      * Relasi ke seluruh pengajuan yang menggunakan layanan ini.
