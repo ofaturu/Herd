@@ -16,19 +16,43 @@
         </NuxtLink>
 
         <nav class="nav-links">
-          <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Daftar Layanan
-          </NuxtLink>
+          <!-- Admin Navigation -->
+          <template v-if="user?.role === 'admin'">
+            <NuxtLink to="/admin" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+              Dashboard Admin
+            </NuxtLink>
+            <NuxtLink to="/admin/layanan" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Kelola Layanan
+            </NuxtLink>
+            <NuxtLink to="/admin/pengajuan" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+              Kelola Pengajuan
+            </NuxtLink>
+          </template>
 
-          <template v-if="user">
+          <!-- Mahasiswa Navigation -->
+          <template v-else-if="user?.role === 'mahasiswa'">
             <NuxtLink to="/mahasiswa" class="nav-link" active-class="nav-link-active">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
               Dashboard
             </NuxtLink>
+            <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Daftar Layanan
+            </NuxtLink>
             <NuxtLink to="/pengajuan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
               Riwayat Pengajuan
+            </NuxtLink>
+          </template>
+
+          <!-- Guest Navigation -->
+          <template v-else>
+            <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Daftar Layanan
             </NuxtLink>
           </template>
         </nav>
@@ -36,10 +60,12 @@
         <div class="nav-actions">
           <template v-if="user">
             <div class="user-chip">
-              <div class="user-avatar">{{ user.name?.charAt(0) || 'M' }}</div>
+              <div class="user-avatar" :class="{ 'avatar-admin': user.role === 'admin' }">
+                {{ user.name?.charAt(0) || (user.role === 'admin' ? 'A' : 'M') }}
+              </div>
               <div class="user-info">
                 <span class="user-name">{{ user.name }}</span>
-                <span class="user-meta">{{ user.nim || user.role }}</span>
+                <span class="user-meta">{{ user.role === 'admin' ? 'Administrator' : (user.nim || 'Mahasiswa') }}</span>
               </div>
             </div>
             <button @click="handleLogout" class="btn btn-outline-danger" title="Logout dari sistem">
@@ -50,7 +76,7 @@
           <template v-else>
             <NuxtLink to="/login" class="btn btn-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-              <span>Login Mahasiswa</span>
+              <span>Login Portal</span>
             </NuxtLink>
           </template>
         </div>
@@ -253,6 +279,10 @@ body {
   justify-content: center;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.avatar-admin {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
 }
 
 .user-info {

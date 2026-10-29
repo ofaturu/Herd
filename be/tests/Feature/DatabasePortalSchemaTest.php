@@ -2,9 +2,9 @@
 
 use App\Models\Layanan;
 use App\Models\Pengajuan;
-use App\Models\RiwayatStatus;
 use App\Models\User;
 use Database\Seeders\PortalLayananMahasiswaSeeder;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Schema;
 
 test('tabel portal layanan mahasiswa memiliki kolom dan struktur yang tepat', function () {
@@ -45,7 +45,7 @@ test('nomor_pengajuan unik mencegah duplikasi', function () {
             'tanggal_pengajuan' => now()->toDateString(),
             'status' => Pengajuan::STATUS_DIAJUKAN,
         ]);
-    })->toThrow(\Illuminate\Database\QueryException::class);
+    })->toThrow(QueryException::class);
 });
 
 test('status pengajuan mematuhi nilai yang diizinkan', function () {

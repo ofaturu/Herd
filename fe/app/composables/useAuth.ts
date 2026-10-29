@@ -88,6 +88,14 @@ export function useAuth() {
     return !!authToken.value
   }
 
+  const isAdmin = () => {
+    return currentUser.value?.role === 'admin'
+  }
+
+  const isMahasiswa = () => {
+    return currentUser.value?.role === 'mahasiswa'
+  }
+
   return {
     user: currentUser,
     token: authToken,
@@ -96,6 +104,8 @@ export function useAuth() {
     logout,
     fetchUser,
     isAuthenticated,
+    isAdmin,
+    isMahasiswa,
     loadStoredToken
   }
 }

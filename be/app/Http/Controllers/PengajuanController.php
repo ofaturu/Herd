@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pengajuan;
 use App\Models\Layanan;
+use App\Models\Pengajuan;
 use App\Models\RiwayatStatus;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -26,16 +26,17 @@ class PengajuanController extends Controller
             $search = $request->query('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_pengajuan', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%")
-                         ->orWhere('nim', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('layanan', function ($lq) use ($search) {
-                      $lq->where('nama', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('layanan', function ($lq) use ($search) {
+                        $lq->where('nama', 'like', "%{$search}%");
+                    });
             });
         }
         $pengajuan = $query->latest()->paginate($perPage);
+
         return response()->json([
             'success' => true,
             'data' => $pengajuan->items(),
@@ -58,6 +59,7 @@ class PengajuanController extends Controller
             ->where('user_id', $request->user()->id)
             ->latest()
             ->paginate($perPage);
+
         return response()->json([
             'success' => true,
             'data' => $pengajuan->items(),
@@ -76,6 +78,7 @@ class PengajuanController extends Controller
     public function show(Pengajuan $pengajuan): JsonResponse
     {
         $pengajuan->load(['layanan', 'user', 'riwayatStatus.user']);
+
         return response()->json([
             'success' => true,
             'data' => $pengajuan,
@@ -94,6 +97,7 @@ class PengajuanController extends Controller
             ], 404);
         }
         $pengajuan->load(['layanan', 'riwayatStatus.user']);
+
         return response()->json([
             'success' => true,
             'data' => $pengajuan,
@@ -136,6 +140,7 @@ class PengajuanController extends Controller
                 'dokumen_pendukung' => $request->input('dokumen_pendukung'),
             ]);
         });
+
         return response()->json([
             'success' => true,
             'message' => 'Pengajuan berhasil dibuat.',
@@ -171,6 +176,7 @@ class PengajuanController extends Controller
             }
         }
         $pengajuan->update($validator->validated());
+
         return response()->json([
             'success' => true,
             'message' => 'Pengajuan berhasil diperbarui.',
@@ -184,7 +190,7 @@ class PengajuanController extends Controller
     public function changeStatus(Request $request, Pengajuan $pengajuan): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'status_baru' => 'required|string|in:' . implode(',', Pengajuan::VALID_STATUSES),
+            'status_baru' => 'required|string|in:'.implode(',', Pengajuan::VALID_STATUSES),
             'catatan' => 'nullable|string',
         ]);
         if ($validator->fails()) {
@@ -211,6 +217,7 @@ class PengajuanController extends Controller
                 'waktu' => now(),
             ]);
         });
+
         return response()->json([
             'success' => true,
             'message' => 'Status pengajuan berhasil diubah.',
@@ -223,10 +230,10 @@ class PengajuanController extends Controller
     public function destroy(Pengajuan $pengajuan): JsonResponse
     {
         $pengajuan->delete();
+
         return response()->json([
             'success' => true,
             'message' => 'Pengajuan berhasil dihapus.',
         ]);
     }
 }
-?>

@@ -1,8 +1,10 @@
 <?php
 
-use App\Models\User;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PengajuanController;
+use App\Models\Layanan;
+use App\Models\Pengajuan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -122,15 +124,15 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
                 'message' => 'Akses dashboard admin diizinkan.',
                 'user' => $request->user()->only(['id', 'name', 'role']),
                 'stats' => [
-                    'total_pengajuan' => \App\Models\Pengajuan::count(),
-                    'diajukan' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DIAJUKAN)->count(),
-                    'diproses' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DIPROSES)->count(),
-                    'perlu_perbaikan' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_PERLU_PERBAIKAN)->count(),
-                    'disetujui' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DISETUJUI)->count(),
-                    'ditolak' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DITOLAK)->count(),
-                    'total_layanan' => \App\Models\Layanan::count(),
-                    'layanan_aktif' => \App\Models\Layanan::where('is_aktif', true)->count(),
-                    'total_mahasiswa' => \App\Models\User::where('role', 'mahasiswa')->count(),
+                    'total_pengajuan' => Pengajuan::count(),
+                    'diajukan' => Pengajuan::where('status', Pengajuan::STATUS_DIAJUKAN)->count(),
+                    'diproses' => Pengajuan::where('status', Pengajuan::STATUS_DIPROSES)->count(),
+                    'perlu_perbaikan' => Pengajuan::where('status', Pengajuan::STATUS_PERLU_PERBAIKAN)->count(),
+                    'disetujui' => Pengajuan::where('status', Pengajuan::STATUS_DISETUJUI)->count(),
+                    'ditolak' => Pengajuan::where('status', Pengajuan::STATUS_DITOLAK)->count(),
+                    'total_layanan' => Layanan::count(),
+                    'layanan_aktif' => Layanan::where('is_aktif', true)->count(),
+                    'total_mahasiswa' => User::where('role', 'mahasiswa')->count(),
                 ],
             ]);
         });

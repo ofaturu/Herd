@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Layanan;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
@@ -23,6 +23,7 @@ class LayananController extends Controller
             $query->where('is_aktif', filter_var($request->query('is_aktif'), FILTER_VALIDATE_BOOLEAN));
         }
         $layanan = $query->paginate($perPage);
+
         return response()->json([
             'success' => true,
             'data' => $layanan->items(),
@@ -46,6 +47,7 @@ class LayananController extends Controller
                 'message' => 'Layanan tidak ditemukan.',
             ], 404);
         }
+
         return response()->json([
             'success' => true,
             'data' => $layanan,
@@ -75,6 +77,7 @@ class LayananController extends Controller
         }
 
         $layanan = Layanan::create($validator->validated());
+
         return response()->json([
             'success' => true,
             'message' => 'Layanan berhasil dibuat.',
@@ -88,12 +91,12 @@ class LayananController extends Controller
     public function update(Request $request, Layanan $layanan): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            "kode" => "sometimes|required|string|max:50|unique:layanan,kode,{$layanan->id}",
-            "nama" => "sometimes|required|string|max:150",
-            "deskripsi" => "nullable|string",
-            "persyaratan" => "nullable|array",
-            "estimasi_hari" => "sometimes|required|integer|min:0",
-            "is_aktif" => "boolean",
+            'kode' => "sometimes|required|string|max:50|unique:layanan,kode,{$layanan->id}",
+            'nama' => 'sometimes|required|string|max:150',
+            'deskripsi' => 'nullable|string',
+            'persyaratan' => 'nullable|array',
+            'estimasi_hari' => 'sometimes|required|integer|min:0',
+            'is_aktif' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -105,6 +108,7 @@ class LayananController extends Controller
         }
 
         $layanan->update($validator->validated());
+
         return response()->json([
             'success' => true,
             'message' => 'Layanan berhasil diperbarui.',
@@ -119,6 +123,7 @@ class LayananController extends Controller
     {
         $layanan->is_aktif = false;
         $layanan->save();
+
         return response()->json([
             'success' => true,
             'message' => 'Layanan berhasil dinonaktifkan.',

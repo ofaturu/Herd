@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Layanan;
 use App\Models\Pengajuan;
 use App\Models\User;
-use App\Models\Layanan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PengajuanFactory extends Factory
@@ -14,7 +14,7 @@ class PengajuanFactory extends Factory
     public function definition()
     {
         return [
-            'nomor_pengajuan' => 'PNJ-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'nomor_pengajuan' => 'PNJ-'.$this->faker->unique()->numberBetween(1000, 9999),
             'user_id' => User::factory(),
             'layanan_id' => Layanan::factory(),
             'tanggal_pengajuan' => now()->toDateString(),
@@ -25,4 +25,3 @@ class PengajuanFactory extends Factory
         ];
     }
 }
-?>

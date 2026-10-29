@@ -3,6 +3,7 @@
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Layanan>
  */
+
 namespace Database\Factories;
 
 use App\Models\Layanan;

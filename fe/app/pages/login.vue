@@ -21,14 +21,21 @@
             class="btn-quick"
             @click="fillCredentials('budi.santoso@mahasiswa.test', 'password123')"
           >
-            👤 Budi (Informatika)
+            👤 Budi (Mhs)
           </button>
           <button
             type="button"
             class="btn-quick"
             @click="fillCredentials('siti.aminah@mahasiswa.test', 'password123')"
           >
-            👤 Siti (Sistem Info)
+            👤 Siti (Mhs)
+          </button>
+          <button
+            type="button"
+            class="btn-quick btn-quick-admin"
+            @click="fillCredentials('admin@portal.test', 'password123')"
+          >
+            👑 Admin Layanan
           </button>
         </div>
       </div>
@@ -108,7 +115,11 @@ onMounted(async () => {
   if (isAuthenticated()) {
     const user = await fetchUser()
     if (user) {
-      router.push('/mahasiswa')
+      if (user.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/mahasiswa')
+      }
     }
   }
 })
@@ -128,7 +139,12 @@ const handleSubmit = async () => {
   try {
     const res = await login(email.value, password.value)
     if (res.success) {
-      router.push('/mahasiswa')
+      const user = res.data?.user
+      if (user?.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/mahasiswa')
+      }
     } else {
       errorMessage.value = res.message || 'Login gagal. Periksa kembali email dan password.'
       if (res.errors) {
@@ -236,6 +252,17 @@ const handleSubmit = async () => {
 .btn-quick:hover {
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.4);
+}
+
+.btn-quick-admin {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+  color: #d8b4fe !important;
+  grid-column: span 2;
+}
+
+.btn-quick-admin:hover {
+  background: rgba(168, 85, 247, 0.22) !important;
 }
 
 .alert-box {

@@ -197,10 +197,66 @@
 ---
 
 ## 6. Masalah Tersisa / Kendala Lingkungan
-- Tidak ada. Seluruh middleware keamanan aktif dan berfungsi tanpa bypass.
+- **Isu CSRF pada Sanctum Stateful API (Resolved)**: Sebelumnya terjadi `419 CSRF token mismatch` pada request browser dari `localhost:3000` akibat middleware `statefulApi()`. Telah diselesaikan dengan mengecualikan `api/*` pada `$middleware->validateCsrfTokens(except: ['api/*'])` di `be/bootstrap/app.php`. Seluruh autentikasi API menggunakan Bearer Personal Access Token yang stateless.
 
 ---
 
-## 7. Langkah Selanjutnya
-- Berhenti setelah Tahap 1.4 sesuai instruksi.
-- Menunggu arahan pengguna sebelum melangkah ke **Tahap 2.1 (Implementasi REST API CRUD Layanan & Pengajuan Mahasiswa)**.
+## 7. Tahap 3.2 — Frontend Mahasiswa Nuxt 4 (Selesai & Terverifikasi)
+- **Halaman yang Diimplementasikan**:
+  - `fe/app/app.vue`: Layout portal responsif, Top Navbar, User Profile Chip, status sistem.
+  - `fe/app/pages/login.vue`: Halaman login dengan tombol cepat akun uji coba (`Budi Santoso`, `Siti Aminah`, `Administrator`) dan error handling.
+  - `fe/app/pages/mahasiswa.vue`: Dashboard mahasiswa dengan widget ringkasan statistik (Diajukan, Diproses, Perlu Perbaikan, Disetujui), alert pengajuan perlu perbaikan, dan daftar permohonan terkini.
+  - `fe/app/pages/layanan/index.vue`: Katalog layanan aktif dengan pencarian real-time dan kartu detail persyaratan.
+  - `fe/app/pages/layanan/[id].vue`: Rincian layanan dan formulir pengajuan berkas (keterangan alasan dan tautan lampiran).
+  - `fe/app/pages/pengajuan/index.vue`: Riwayat pengajuan mahasiswa dengan filter tab status dan pencarian tiket.
+  - `fe/app/pages/pengajuan/[id].vue`: Rincian berkas pengajuan, banner instruksi revisi admin, dan audit timeline status (`riwayat_status`).
+- **Endpoint yang Digunakan**:
+  - `POST /api/auth/login`
+  - `GET /api/user/me`
+  - `POST /api/auth/logout`
+  - `GET /api/layanan`
+  - `GET /api/layanan/{id}`
+  - `POST /api/pengajuan`
+  - `GET /api/pengajuan/mine`
+  - `GET /api/pengajuan/mine/{id}`
+
+---
+
+## 8. Tahap 3.3 — Dashboard Admin Nuxt 4 (Selesai & Terverifikasi)
+- **Halaman yang Diimplementasikan**:
+  - `fe/app/pages/admin/index.vue`: Dashboard admin dengan statistik riil dari backend (total pengajuan, per status diajukan/diproses/perlu perbaikan/disetujui/ditolak, total & layanan aktif, total akun mahasiswa), shortcut aksi, dan antrean pengajuan yang perlu segera diverifikasi.
+  - `fe/app/pages/admin/layanan/index.vue`: CRUD Master Layanan lengkap dengan modal Tambah Layanan, modal Ubah Data Layanan, tindakan Nonaktifkan (Soft Delete via `DELETE`), dan tindakan Aktifkan Kembali (`PUT`).
+  - `fe/app/pages/admin/pengajuan/index.vue`: Manajemen seluruh berkas pengajuan mahasiswa dengan filter status, pencarian multi-kolom (nomor tiket, nama mahasiswa, NIM, nama layanan), dan pagination.
+  - `fe/app/pages/admin/pengajuan/[id].vue`: Rincian lengkap pengajuan mahasiswa (data pemohon, NIM, prodi, kontak, berkas lampiran), formulir tindakan status (`diproses`, `perlu_perbaikan`, `disetujui`, `ditolak`) dengan catatan wajib untuk revisi/penolakan, konfirmasi tindakan, serta timeline audit perubahan status.
+- **Endpoint yang Digunakan**:
+  - `GET /api/admin/dashboard`: Mengembalikan statistik riil agregasi sistem.
+  - `GET /api/layanan?all=1`: Mengembalikan seluruh layanan (aktif & nonaktif) untuk admin.
+  - `POST /api/layanan`: Menambahkan layanan baru (kode, nama, deskripsi, persyaratan, estimasi_hari, is_aktif).
+  - `PUT /api/layanan/{id}`: Memperbarui data layanan dan mengaktifkan kembali layanan.
+  - `DELETE /api/layanan/{id}`: Menonaktifkan layanan (soft-delete).
+  - `GET /api/pengajuan`: Mengambil daftar seluruh pengajuan dengan filter status, search, pagination, dan eager loading relasi (`layanan`, `user`).
+  - `GET /api/pengajuan/{id}`: Mengambil rincian pengajuan lengkap dengan relasi mahasiswa, layanan, dan `riwayat_status`.
+  - `POST /api/pengajuan/{id}/status`: Memperbarui status pengajuan, menyimpan `catatan_admin`, dan mencatat riwayat ke tabel `riwayat_status`.
+
+---
+
+## 9. Hasil Pengujian & Verifikasi
+1. **Frontend Compilation (Nuxt 4 / Vite)**:
+   - `npm run build` berhasil 100% tanpa error (`Build complete in 15.4s!`).
+   - Seluruh rute SSR/Client (`/admin`, `/admin/layanan`, `/admin/pengajuan`, `/admin/pengajuan/[id]`) beroperasi dengan status HTTP 200.
+2. **Backend Automated Tests (Pest)**:
+   - `php artisan test`: 69 passed (100% lulus, 239 assertions).
+3. **RBAC & Security Flow Verification (`scratch/test_admin_flow.ps1`)**:
+   - `[PASS]` Admin login sukses (`admin@portal.test`).
+   - `[PASS]` Admin mengakses `/api/admin/dashboard` (Status 200, mengembalikan statistik riil).
+   - `[PASS]` Admin mengambil daftar pengajuan (`GET /api/pengajuan`, Status 200).
+   - `[PASS]` Mahasiswa login sukses (`budi.santoso@mahasiswa.test`).
+   - `[PASS]` Mahasiswa ditolak saat mengakses `/api/admin/dashboard` (HTTP 403 Forbidden).
+   - `[PASS]` Mahasiswa ditolak saat mencoba membuat layanan `POST /api/layanan` (HTTP 403 Forbidden).
+   - `[PASS]` Frontend Admin memvalidasi peran dan menampilkan proteksi 403 Access Denied jika mahasiswa mencoba membuka halaman `/admin`.
+
+---
+
+## 10. Status Akhir
+- **Tahap 3.3**: SELESAI & TERVERIFIKASI.
+- Seluruh antarmuka admin dan alur mahasiswa telah terhubung dengan REST API Laravel, tanpa data palsu, dan siap digunakan.

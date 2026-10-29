@@ -1,29 +1,26 @@
 <?php
 
-use App\Models\Pengajuan;
 use App\Models\Layanan;
+use App\Models\Pengajuan;
 use App\Models\User;
-use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
-use function Pest\Laravel\putJson;
-use function Pest\Laravel\deleteJson;
-if (!function_exists('adminUser')) {
+
+if (! function_exists('adminUser')) {
     function adminUser()
     {
         return User::factory()->create(['role' => User::ROLE_ADMIN]);
     }
 }
 
-if (!function_exists('mahasiswaUser')) {
+if (! function_exists('mahasiswaUser')) {
     function mahasiswaUser()
     {
         return User::factory()->create(['role' => User::ROLE_MAHASISWA]);
     }
 }
-
-
 
 it('mahasiswa can create pengajuan for active layanan', function () {
     $mahasiswa = mahasiswaUser();
@@ -57,7 +54,7 @@ it('admin can list all pengajuan with status filter', function () {
     Pengajuan::factory()->create(['layanan_id' => $layanan->id, 'status' => Pengajuan::STATUS_DIAJUKAN]);
     Pengajuan::factory()->create(['layanan_id' => $layanan->id, 'status' => Pengajuan::STATUS_DIPROSES]);
     // filter by status
-    getJson('/api/pengajuan?status=' . Pengajuan::STATUS_DIPROSES)
+    getJson('/api/pengajuan?status='.Pengajuan::STATUS_DIPROSES)
         ->assertStatus(200)
         ->assertJsonPath('data.0.status', Pengajuan::STATUS_DIPROSES);
 });
@@ -69,10 +66,10 @@ it('mahasiswa can view own pengajuan but not others', function () {
     $layanan = Layanan::factory()->create(['is_aktif' => true]);
     $pengajuan = Pengajuan::factory()->create(['layanan_id' => $layanan->id, 'user_id' => $mahasiswa1->id]);
     // own view
-    getJson('/api/pengajuan/mine/' . $pengajuan->id)->assertStatus(200);
+    getJson('/api/pengajuan/mine/'.$pengajuan->id)->assertStatus(200);
     // other user
     actingAs($mahasiswa2);
-    getJson('/api/pengajuan/mine/' . $pengajuan->id)->assertStatus(404);
+    getJson('/api/pengajuan/mine/'.$pengajuan->id)->assertStatus(404);
 });
 
 it('admin can change status and creates riwayat_status', function () {
@@ -81,11 +78,10 @@ it('admin can change status and creates riwayat_status', function () {
     $layanan = Layanan::factory()->create(['is_aktif' => true]);
     $pengajuan = Pengajuan::factory()->create(['layanan_id' => $layanan->id, 'status' => Pengajuan::STATUS_DIAJUKAN]);
     $payload = ['status_baru' => Pengajuan::STATUS_DIPROSES, 'catatan' => 'Sedang diproses'];
-    postJson('/api/pengajuan/' . $pengajuan->id . '/status', $payload)
+    postJson('/api/pengajuan/'.$pengajuan->id.'/status', $payload)
         ->assertStatus(200)
         ->assertJsonPath('message', 'Status pengajuan berhasil diubah.');
     $pengajuan->refresh();
     expect($pengajuan->status)->toBe(Pengajuan::STATUS_DIPROSES);
     expect($pengajuan->riwayatStatus()->count())->toBe(1);
 });
-?>
