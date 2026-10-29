@@ -91,13 +91,13 @@
           </div>
 
           <!-- Supporting Documents -->
-          <div v-if="pengajuan.dokumen_pendukung && pengajuan.dokumen_pendukung.length > 0" class="section-block">
+          <div v-if="docList && docList.length > 0" class="section-block">
             <h3 class="section-heading">Dokumen / Tautan Lampiran Pendukung</h3>
             <ul class="doc-list">
-              <li v-for="(doc, idx) in pengajuan.dokumen_pendukung" :key="idx">
-                <a :href="doc" target="_blank" rel="noopener noreferrer" class="doc-link">
+              <li v-for="(doc, idx) in docList" :key="idx">
+                <a :href="getDocUrl(doc)" target="_blank" rel="noopener noreferrer" class="doc-link">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  <span>Buka Berkas Lampiran {{ idx + 1 }}</span>
+                  <span>{{ getDocName(doc, idx) }}</span>
                 </a>
               </li>
             </ul>
@@ -224,10 +224,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
 import { useAuth } from '@/composables/useAuth'
 import { useApi } from '@/composables/useApi'
+
+const config = useRuntimeConfig()
+const storageBaseUrl = `${(config.public.apiBaseUrl as string || 'http://localhost:8000').replace(/\/api\/?$/, '').replace(/\/$/, '')}/storage`
 
 const route = useRoute()
 const router = useRouter()
@@ -235,6 +238,112 @@ const { fetchUser, isAuthenticated } = useAuth()
 const api = useApi()
 
 const pengajuan = ref<any>(null)
+
+const docList = computed<any[]>(() => {
+  const docs = pengajuan.value?.dokumen_pendukung
+  if (!docs) return []
+  if (Array.isArray(docs)) return docs
+  if (typeof docs === 'string') {
+    try {
+      const parsed = JSON.parse(docs)
+      if (Array.isArray(parsed)) return parsed
+      if (typeof parsed === 'object' && parsed !== null) return Object.values(parsed)
+      return [docs]
+    } catch {
+      return [docs]
+    }
+  }
+  if (typeof docs === 'object' && docs !== null) {
+    return Object.values(docs)
+  }
+  return []
+})
+
+const getDocUrl = (doc: any): string => {
+  if (!doc) return '#'
+
+  let item = doc
+  if (typeof item === 'string') {
+    const trimmed = item.trim()
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        item = JSON.parse(trimmed)
+      } catch {
+        // bukan format JSON
+      }
+    }
+  }
+
+  if (typeof item === 'string') {
+    const trimmed = item.trim()
+    if (!trimmed) return '#'
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+    return `${storageBaseUrl}/${trimmed.replace(/^\/+/, '')}`
+  }
+
+  if (typeof item === 'object' && item !== null) {
+    const raw = item.url || item.path || item.file || item.link || ''
+    if (typeof raw === 'string' && raw.trim()) {
+      const trimmed = raw.trim()
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+      return `${storageBaseUrl}/${trimmed.replace(/^\/+/, '')}`
+    }
+  }
+
+  return '#'
+}
+
+const getDocName = (doc: any, idx?: number | string): string => {
+  const parsedIdx = Number(idx)
+  const num = Number.isFinite(parsedIdx) ? parsedIdx + 1 : 1
+  const fallback = `Berkas Lampiran ${num}`
+
+  if (!doc) return fallback
+
+  let item = doc
+  if (typeof item === 'string') {
+    const trimmed = item.trim()
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        item = JSON.parse(trimmed)
+      } catch {
+        // abaikan jika bukan JSON valid
+      }
+    }
+  }
+
+  const cleanFilename = (str: string): string => {
+    const withoutQuery = (str.split('?')[0] ?? '').split('#')[0] ?? ''
+    const segments = withoutQuery.trim().replace(/\\/g, '/').split('/').filter(Boolean)
+    const base = segments[segments.length - 1] ?? ''
+    try {
+      return decodeURIComponent(base)
+    } catch {
+      return base
+    }
+  }
+
+  if (typeof item === 'string') {
+    const name = cleanFilename(item)
+    return name || fallback
+  }
+
+  if (typeof item === 'object') {
+    if (item.nama && typeof item.nama === 'string' && item.nama.trim()) {
+      return cleanFilename(item.nama.trim()) || fallback
+    }
+    if (item.name && typeof item.name === 'string' && item.name.trim()) {
+      return cleanFilename(item.name.trim()) || fallback
+    }
+    const raw = item.url || item.path || item.file || item.link
+    if (typeof raw === 'string' && raw.trim()) {
+      const name = cleanFilename(raw)
+      return name || fallback
+    }
+  }
+
+  return fallback
+}
 const loading = ref(true)
 const accessDenied = ref(false)
 const errorMessage = ref('')
