@@ -73,13 +73,13 @@
             <p class="reason-text">{{ pengajuan.keterangan || 'Tidak ada keterangan tambahan.' }}</p>
           </div>
 
-          <div v-if="pengajuan.dokumen_pendukung && pengajuan.dokumen_pendukung.length > 0" class="info-section">
+          <div v-if="Array.isArray(pengajuan.dokumen_pendukung) && pengajuan.dokumen_pendukung.length > 0" class="info-section">
             <h4 class="section-title">Dokumen Pendukung yang Dilampirkan</h4>
             <ul class="doc-list">
               <li v-for="(doc, idx) in pengajuan.dokumen_pendukung" :key="idx">
-                <a :href="doc" target="_blank" rel="noopener noreferrer" class="doc-link">
+                <a :href="doc.startsWith('http') ? doc : `${storageBaseUrl}/${doc}`" target="_blank" rel="noopener noreferrer" class="doc-link">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  <span>Lampiran {{ idx + 1 }} (Buka Berkas)</span>
+                  <span>{{ doc.split('/').pop() || `Lampiran ${Number(idx) + 1}` }}</span>
                 </a>
               </li>
             </ul>
@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from '#app'
+import { useRoute, useRouter, useRuntimeConfig } from '#app'
 import { useAuth } from '@/composables/useAuth'
 import { useApi } from '@/composables/useApi'
 
@@ -146,6 +146,9 @@ const route = useRoute()
 const router = useRouter()
 const { isAuthenticated, fetchUser } = useAuth()
 const api = useApi()
+
+const config = useRuntimeConfig()
+const storageBaseUrl = `${(config.public.apiBaseUrl as string || 'http://localhost:8000').replace(/\/$/, '')}/storage`
 
 const pengajuan = ref<any>(null)
 const loading = ref(true)

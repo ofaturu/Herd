@@ -92,7 +92,8 @@ onMounted(async () => {
   margin-bottom: 1.25rem;
   background: linear-gradient(135deg, #f8fafc 30%, #94a3b8 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .hero-desc {
