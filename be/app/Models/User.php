@@ -22,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $nim
  * @property string|null $prodi
  * @property string|null $no_hp
+ * @property string|null $foto_profil
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $two_factor_secret
@@ -53,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         'nim',
         'prodi',
         'no_hp',
+        'foto_profil',
     ];
 
     /**

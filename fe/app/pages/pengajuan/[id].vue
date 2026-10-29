@@ -77,9 +77,14 @@
             <h4 class="section-title">Dokumen Pendukung yang Dilampirkan</h4>
             <ul class="doc-list">
               <li v-for="(doc, idx) in pengajuan.dokumen_pendukung" :key="idx">
-                <a :href="doc.startsWith('http') ? doc : `${storageBaseUrl}/${doc}`" target="_blank" rel="noopener noreferrer" class="doc-link">
+                <a
+                  :href="String(doc).startsWith('http') ? String(doc) : `${storageBaseUrl}/${String(doc)}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="doc-link"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  <span>{{ doc.split('/').pop() || `Lampiran ${Number(idx) + 1}` }}</span>
+                  <span>{{ String(doc).split('/').pop() || `Lampiran ${Number(idx) + 1}` }}</span>
                 </a>
               </li>
             </ul>
@@ -313,7 +318,7 @@ onMounted(() => {
 
 .rev-note-box p {
   font-size: 0.9rem;
-  color: #fff;
+  color: var(--text);
 }
 
 .layout-grid {
@@ -357,7 +362,7 @@ onMounted(() => {
 .service-heading {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   line-height: 1.25;
 }
 
@@ -461,7 +466,7 @@ onMounted(() => {
   gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 1.5rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-subtle);

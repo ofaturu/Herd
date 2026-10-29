@@ -8,7 +8,9 @@
 
     <!-- Error State -->
     <div v-else-if="errorMessage" class="state-container">
-      <div class="state-icon error-icon">⚠️</div>
+      <div class="state-icon error-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
       <h2>Gagal Memuat Data</h2>
       <p>{{ errorMessage }}</p>
       <button @click="loadData" class="btn btn-primary">Coba Lagi</button>
@@ -20,7 +22,7 @@
       <section class="welcome-card">
         <div class="welcome-left">
           <div class="user-badge">Mahasiswa Aktif</div>
-          <h1 class="welcome-title">Halo, {{ user?.name || 'Mahasiswa' }}! 👋</h1>
+          <h1 class="welcome-title">Halo, {{ user?.name || 'Mahasiswa' }}</h1>
           <p class="welcome-desc">
             NIM: <strong>{{ user?.nim || '-' }}</strong> • Program Studi: <strong>{{ user?.prodi || 'Akademik' }}</strong>
           </p>
@@ -57,9 +59,11 @@
 
       <!-- Warning Alert if any need revision -->
       <div v-if="stats.needRevision > 0" class="action-alert">
-        <div class="alert-icon">⚠️</div>
+        <div class="alert-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
         <div class="alert-body">
-          <h4>Perhatian: Ada Pengajuan Perlu Perbaikan!</h4>
+          <h4>Perhatian: Ada Pengajuan Perlu Perbaikan</h4>
           <p>Terdapat {{ stats.needRevision }} pengajuan yang membutuhkan perbaikan dokumen atau catatan dari admin. Silakan periksa detailnya.</p>
         </div>
         <NuxtLink to="/pengajuan" class="btn btn-warning-action">Periksa Sekarang</NuxtLink>
@@ -76,7 +80,9 @@
         </div>
 
         <div v-if="recentPengajuan.length === 0" class="empty-state">
-          <div class="empty-icon">📁</div>
+          <div class="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+          </div>
           <h3>Belum Ada Pengajuan Layanan</h3>
           <p>Anda belum pernah mengajukan layanan akademik. Pilih layanan yang Anda butuhkan sekarang.</p>
           <NuxtLink to="/layanan" class="btn btn-primary" style="margin-top: 1rem;">
@@ -268,7 +274,7 @@ const formatDate = (dateStr: string) => {
 .welcome-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.5rem;
 }
 
@@ -391,7 +397,7 @@ const formatDate = (dateStr: string) => {
 .section-header h2 {
   font-size: 1.35rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .section-header p {
@@ -451,7 +457,7 @@ const formatDate = (dateStr: string) => {
 .card-service-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.4rem;
 }
 

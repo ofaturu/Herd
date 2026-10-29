@@ -484,7 +484,7 @@ onMounted(() => {
 .service-title {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   line-height: 1.25;
 }
 
@@ -594,7 +594,7 @@ onMounted(() => {
 .action-card-title {
   font-size: 1.35rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 
@@ -663,10 +663,10 @@ onMounted(() => {
 .form-textarea {
   width: 100%;
   padding: 0.75rem 0.9rem;
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.88rem;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -702,7 +702,7 @@ onMounted(() => {
   gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 1.5rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-subtle);

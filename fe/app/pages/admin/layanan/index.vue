@@ -445,7 +445,7 @@ onMounted(() => {
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.25rem;
 }
 
@@ -538,7 +538,7 @@ onMounted(() => {
 }
 
 .svc-name {
-  color: #fff;
+  color: var(--text);
   font-size: 0.95rem;
 }
 
@@ -628,11 +628,11 @@ onMounted(() => {
 .modal-card {
   width: 100%;
   max-width: 580px;
-  background: #111827;
+  background: var(--surface);
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -649,7 +649,7 @@ onMounted(() => {
 .modal-header h3 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .btn-modal-close {
@@ -661,7 +661,7 @@ onMounted(() => {
 }
 
 .btn-modal-close:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 .modal-form {
@@ -695,10 +695,10 @@ onMounted(() => {
 .form-input, .form-textarea {
   width: 100%;
   padding: 0.65rem 0.85rem;
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.88rem;
   font-family: inherit;
   transition: all 0.2s ease;

@@ -101,6 +101,25 @@
 
 ---
 
+## 9. Pembaruan Fitur & Peningkatan UX (Anti-Slop & Self-Service)
+- **Desain Bebas AI Slop & Dark/Light Mode**:
+  - Implementasi sistem token tema dinamis (`--bg`, `--surface`, `--border`, `--text`, dll.) dengan tombol ganti tema di navbar (`#btn-theme-toggle`), tersimpan otomatis di `localStorage`.
+  - Pembersihan emoji generik di seluruh antarmuka login, katalog layanan, pengajuan, dan dashboard mahasiswa/admin, digantikan dengan icon SVG yang tajam dan semantik.
+- **Fitur Mandiri Mahasiswa (Self-Service)**:
+  - **Pendaftaran Akun Baru (`/daftar`)**: Form pendaftaran mandiri mahasiswa yang memvalidasi Nama, NIM, Email, Program Studi, No HP, dan Kata Sandi dengan endpoint `POST /api/auth/register`.
+  - **Profil & Foto Profil (`/profil`)**: Tombol avatar di navbar sebelah kiri tombol Logout yang membuka halaman ubah data diri mandiri serta unggah berkas foto profil (disimpan di Laravel Storage publik, endpoint `POST /api/user/foto` dan `PUT /api/user/profile`).
+- **Perbaikan Persyaratan Dokumen**:
+  - Fungsi `parseReqs()` di katalog (`/layanan`) dan detail layanan (`/layanan/[id]`) untuk mem-parsing format array JSON `["1. KTM...", "2. Bukti..."]` menjadi daftar berurutan (`<ol class="req-list">`) yang rapi dan mudah dibaca.
+- **Perbaikan Bug Detail Pengajuan**:
+  - Memperbaiki `TypeError: doc.startsWith is not a function` pada `fe/app/pages/pengajuan/[id].vue:80` dengan konversi aman `String(doc)`.
+- **Integrasi SMTP Gmail & Verifikasi Login OTP 2-Langkah**:
+  - Konfigurasi `be/.env` (`MAIL_MAILER=smtp`, `MAIL_HOST=smtp.gmail.com`, `MAIL_PORT=587`, `MAIL_USERNAME=fatchurrachman001@gmail.com`, `MAIL_PASSWORD="vnin wilg pdrk inbj"`, `MAIL_FROM_ADDRESS="fatchurrachman001@gmail.com"`).
+  - Alur autentikasi login 2-langkah: request login memvalidasi kredensial, menghasilkan kode OTP 6-digit acak yang disimpan di Cache (berlaku 10 menit), dan mengirim email HTML resmi ke pengguna via Gmail SMTP.
+  - Endpoint baru: `POST /api/auth/verify-otp` untuk validasi kode OTP dan penerbitan token Sanctum, serta `POST /api/auth/resend-otp` untuk pengiriman ulang kode.
+  - Tampilan form login Nuxt 4 (`/login`) dengan transisi halus ke input OTP 6-digit, countdown pengiriman ulang kode, dan opsi ganti akun.
+
+---
+
 ## 9. Langkah Selanjutnya
 - Setelah menyelesaikan poin 1‑2 di atas, siap melanjutkan ke **Tahap 2.1** (implementasi CRUD layanan & pengajuan) sesuai arahan pengguna.
 

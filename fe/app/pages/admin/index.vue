@@ -331,7 +331,7 @@ onMounted(() => {
 .hero-title {
   font-size: 2.1rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.5rem;
   line-height: 1.25;
 }
@@ -425,7 +425,7 @@ onMounted(() => {
 .stat-number {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   line-height: 1.1;
   margin-bottom: 0.35rem;
 }
@@ -480,7 +480,7 @@ onMounted(() => {
 .section-title-row h2 {
   font-size: 1.35rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.25rem;
 }
 
@@ -543,7 +543,7 @@ onMounted(() => {
 
 .st-name {
   font-weight: 600;
-  color: #fff;
+  color: var(--text);
 }
 
 .st-nim {

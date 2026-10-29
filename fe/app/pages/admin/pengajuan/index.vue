@@ -321,7 +321,7 @@ onMounted(() => {
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.25rem;
 }
 
@@ -340,7 +340,7 @@ onMounted(() => {
 }
 
 .header-stat-tag strong {
-  color: #fff;
+  color: var(--text);
 }
 
 .filters-card {
@@ -401,10 +401,10 @@ onMounted(() => {
 .search-input {
   width: 100%;
   padding: 0.55rem 2rem 0.55rem 2.3rem;
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.85rem;
 }
 
@@ -485,7 +485,7 @@ onMounted(() => {
 }
 
 .st-name {
-  color: #fff;
+  color: var(--text);
 }
 
 .st-meta {

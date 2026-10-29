@@ -10,6 +10,8 @@ export interface UserProfile {
   role: 'admin' | 'mahasiswa' | string
   nim?: string | null
   prodi?: string | null
+  no_hp?: string | null
+  foto_profil?: string | null
 }
 
 const currentUser = ref<UserProfile | null>(null)
@@ -67,6 +69,52 @@ export function useAuth() {
     return res
   }
 
+  const verifyOtp = async (sessionToken: string, otp: string): Promise<ApiResponse<any>> => {
+    const res = await api.post('/auth/verify-otp', {
+      session_token: sessionToken,
+      otp,
+    })
+    if (res.success && res.data?.token) {
+      authToken.value = res.data.token
+      authCookie.value = res.data.token
+      api.setAuthHeader(res.data.token)
+
+      if (res.data.user) {
+        currentUser.value = res.data.user
+      } else {
+        await fetchUser()
+      }
+    }
+    return res
+  }
+
+  const resendOtp = async (sessionToken: string): Promise<ApiResponse<any>> => {
+    return await api.post('/auth/resend-otp', { session_token: sessionToken })
+  }
+
+  const register = async (payload: {
+    name: string
+    email: string
+    nim: string
+    prodi: string
+    no_hp?: string
+    password: string
+  }): Promise<ApiResponse<any>> => {
+    const res = await api.post('/auth/register', payload)
+    if (res.success && res.data?.token) {
+      authToken.value = res.data.token
+      authCookie.value = res.data.token
+      api.setAuthHeader(res.data.token)
+
+      if (res.data.user) {
+        currentUser.value = res.data.user
+      } else {
+        await fetchUser()
+      }
+    }
+    return res
+  }
+
   const logout = async () => {
     try {
       if (authToken.value) {
@@ -101,6 +149,9 @@ export function useAuth() {
     token: authToken,
     isInitialized,
     login,
+    verifyOtp,
+    resendOtp,
+    register,
     logout,
     fetchUser,
     isAuthenticated,

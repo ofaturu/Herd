@@ -248,7 +248,7 @@ onMounted(() => {
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 
@@ -325,10 +325,10 @@ onMounted(() => {
 .search-input {
   width: 100%;
   padding: 0.55rem 0.75rem 0.55rem 2.2rem;
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.85rem;
 }
 
@@ -395,7 +395,7 @@ onMounted(() => {
 
 .cell-title {
   font-weight: 600;
-  color: #fff;
+  color: var(--text);
 }
 
 .cell-sub {

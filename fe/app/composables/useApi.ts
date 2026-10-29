@@ -88,6 +88,26 @@ export const useApi = () => {
     delete: <T = any>(endpoint: string, options: any = {}) => request<T>(endpoint, { method: 'DELETE', ...options }),
     setAuthHeader: (token: string) => { tokenCookie.value = token },
     clearAuthHeader: () => { tokenCookie.value = null },
-    getToken: () => tokenCookie.value
+    getToken: () => tokenCookie.value,
+    postForm: async <T = any>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> => {
+      const url = buildUrl(endpoint)
+      // Omit Content-Type so fetch sets multipart boundary automatically
+      const headers: Record<string, string> = { 'Accept': 'application/json' }
+      if (tokenCookie.value) headers['Authorization'] = `Bearer ${tokenCookie.value}`
+      try {
+        const response = await $fetch<any>(url, { method: 'POST', body: formData, headers })
+        if (typeof response === 'object' && response !== null && 'success' in response) {
+          return response as ApiResponse<T>
+        }
+        return { success: true, data: response }
+      } catch (err: any) {
+        const errorData = err.response?._data || err.data
+        return {
+          success: false,
+          message: errorData?.message || err.message || 'Gagal mengunggah file.',
+          errors: errorData?.errors
+        }
+      }
+    }
   }
 }

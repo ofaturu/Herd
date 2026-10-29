@@ -1,83 +1,110 @@
 <template>
-  <div class="app-layout">
+  <div class="app-layout" :data-theme="theme">
     <header class="app-navbar">
       <div class="nav-container">
         <NuxtLink to="/" class="nav-brand">
           <div class="brand-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
               <path d="M6 12v5c3 3 9 3 12 0v-5"/>
             </svg>
           </div>
           <div class="brand-text">
             <span class="brand-title">Portal Mahasiswa</span>
-            <span class="brand-subtitle">Layanan Terpadu</span>
+            <span class="brand-sub">Layanan Terpadu</span>
           </div>
         </NuxtLink>
 
         <nav class="nav-links">
-          <!-- Admin Navigation -->
           <template v-if="user?.role === 'admin'">
             <NuxtLink to="/admin" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-              Dashboard Admin
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+              Dashboard
             </NuxtLink>
             <NuxtLink to="/admin/layanan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
               Kelola Layanan
             </NuxtLink>
             <NuxtLink to="/admin/pengajuan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-              Kelola Pengajuan
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Pengajuan
             </NuxtLink>
           </template>
 
-          <!-- Mahasiswa Navigation -->
           <template v-else-if="user?.role === 'mahasiswa'">
             <NuxtLink to="/mahasiswa" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
               Dashboard
             </NuxtLink>
             <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               Daftar Layanan
             </NuxtLink>
             <NuxtLink to="/pengajuan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-              Riwayat Pengajuan
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Riwayat
             </NuxtLink>
           </template>
 
-          <!-- Guest Navigation -->
           <template v-else>
-            <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              Daftar Layanan
-            </NuxtLink>
+            <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">Layanan</NuxtLink>
           </template>
         </nav>
 
-        <div class="nav-actions">
+        <div class="nav-right">
+          <!-- Theme Toggle -->
+          <button
+            id="btn-theme-toggle"
+            class="btn-icon"
+            :title="theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'"
+            @click="toggleTheme"
+            aria-label="Toggle tema"
+          >
+            <svg v-if="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+
           <template v-if="user">
-            <div class="user-chip">
-              <div class="user-avatar" :class="{ 'avatar-admin': user.role === 'admin' }">
-                {{ user.name?.charAt(0) || (user.role === 'admin' ? 'A' : 'M') }}
-              </div>
-              <div class="user-info">
-                <span class="user-name">{{ user.name }}</span>
-                <span class="user-meta">{{ user.role === 'admin' ? 'Administrator' : (user.nim || 'Mahasiswa') }}</span>
-              </div>
+            <!-- Profile button (mahasiswa only) -->
+            <NuxtLink
+              v-if="user.role === 'mahasiswa'"
+              id="btn-profile"
+              to="/profil"
+              class="user-avatar-btn"
+              title="Ubah data diri"
+              aria-label="Halaman profil"
+            >
+              <img
+                v-if="userFotoUrl"
+                :src="userFotoUrl"
+                class="avatar-img"
+                alt="Foto profil"
+              />
+              <span v-else class="avatar-initials" :class="{ 'avatar-admin': user.role === 'admin' }">
+                {{ user.name?.charAt(0) || 'M' }}
+              </span>
+            </NuxtLink>
+            <div v-else class="user-avatar-btn no-link">
+              <span class="avatar-initials avatar-admin">{{ user.name?.charAt(0) || 'A' }}</span>
             </div>
-            <button @click="handleLogout" class="btn btn-outline-danger" title="Logout dari sistem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-              <span>Logout</span>
+
+            <div class="user-info-block">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-meta">{{ user.role === 'admin' ? 'Administrator' : (user.nim || 'Mahasiswa') }}</span>
+            </div>
+
+            <button
+              id="btn-logout"
+              class="btn btn-outline-danger"
+              title="Keluar dari sistem"
+              @click="handleLogout"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              <span class="btn-label">Keluar</span>
             </button>
           </template>
           <template v-else>
-            <NuxtLink to="/login" class="btn btn-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-              <span>Login Portal</span>
-            </NuxtLink>
+            <NuxtLink to="/login" class="btn btn-primary">Masuk</NuxtLink>
           </template>
         </div>
       </div>
@@ -88,11 +115,11 @@
     </main>
 
     <footer class="app-footer">
-      <div class="footer-container">
-        <p>© 2026 Portal Layanan Mahasiswa • Terintegrasi dengan Laravel 12 Sanctum API</p>
-        <div class="system-status">
-          <span class="status-dot"></span>
-          <span>Sistem Aktif & Terhubung</span>
+      <div class="footer-inner">
+        <span>© 2026 Portal Layanan Mahasiswa</span>
+        <div class="footer-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Sistem Aktif</span>
         </div>
       </div>
     </footer>
@@ -100,320 +127,455 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
+import { useRuntimeConfig } from '#app'
 
 const { user, fetchUser, logout } = useAuth()
+const config = useRuntimeConfig()
+const storageBase = `${(config.public.apiBaseUrl as string || 'http://localhost:8000').replace(/\/$/, '')}/storage`
+
+const theme = ref<'dark' | 'light'>('dark')
 
 onMounted(async () => {
+  const saved = localStorage.getItem('portal-theme') as 'dark' | 'light' | null
+  if (saved === 'light' || saved === 'dark') theme.value = saved
   await fetchUser()
 })
 
+const toggleTheme = () => {
+  theme.value = theme.value === 'dark' ? 'light' : 'dark'
+  localStorage.setItem('portal-theme', theme.value)
+}
+
+const userFotoUrl = computed(() => {
+  if (!user.value?.foto_profil) return null
+  const p = user.value.foto_profil as string
+  return p.startsWith('http') ? p : `${storageBase}/${p}`
+})
+
 const handleLogout = async () => {
-  if (confirm('Apakah Anda yakin ingin logout?')) {
+  if (confirm('Yakin ingin keluar?')) {
     await logout()
   }
 }
 </script>
 
 <style>
-/* Modern CSS Reset & Design Tokens */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* ─────────────────────────────────────────────
+   Google Font
+───────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ─────────────────────────────────────────────
+   Design tokens – dark (default)
+───────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  --bg:           #0e1117;
+  --bg-subtle:    #161b25;
+  --surface:      rgba(22, 27, 37, 0.9);
+  --surface-hover:rgba(28, 35, 50, 0.95);
+  --border:       rgba(255,255,255,0.09);
+  --border-subtle:rgba(255,255,255,0.05);
+
+  --primary:      #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-text: #93c5fd;
+
+  --text:         #f1f5f9;
+  --text-muted:   #94a3b8;
+  --text-dim:     #64748b;
+
+  --success:      #22c55e;
+  --warning:      #f59e0b;
+  --danger:       #ef4444;
+  --info:         #06b6d4;
+
+  --radius-sm:    6px;
+  --radius:       10px;
+  --radius-lg:    16px;
+  --font:         'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─────────────────────────────────────────────
+   Design tokens – light
+───────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:           #f4f6fb;
+  --bg-subtle:    #eef1f7;
+  --surface:      rgba(255,255,255,0.92);
+  --surface-hover:rgba(255,255,255,1);
+  --border:       rgba(0,0,0,0.1);
+  --border-subtle:rgba(0,0,0,0.06);
+
+  --primary:      #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-text: #1e40af;
+
+  --text:         #111827;
+  --text-muted:   #4b5563;
+  --text-dim:     #9ca3af;
+}
+
+/* ─────────────────────────────────────────────
+   Compatibility aliases for page-level CSS
+───────────────────────────────────────────── */
 :root {
-  --bg-base: #090d16;
-  --bg-gradient: radial-gradient(circle at 50% 0%, #151f38 0%, #090d16 65%);
-  --surface-card: rgba(19, 27, 46, 0.75);
-  --surface-card-hover: rgba(26, 38, 64, 0.85);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-light: #60a5fa;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --info: #06b6d4;
-  --radius: 12px;
-  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg-base:            var(--bg);
+  --surface-card:       var(--surface);
+  --surface-card-hover: var(--surface-hover);
+  --border-color:       var(--border);
+  --text-main:          var(--text);
+  --primary-light:      var(--primary-text);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ─────────────────────────────────────────────
+   Base reset & typography
+───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: var(--font-family);
-  background-color: var(--bg-base);
-  background-image: var(--bg-gradient);
-  background-attachment: fixed;
-  color: var(--text-main);
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s, color 0.25s;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+}
+
+input, select, textarea {
+  color: var(--text);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border);
+  font-family: inherit;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-dim);
+}
+
+/* ─────────────────────────────────────────────
+   Layout
+───────────────────────────────────────────── */
 .app-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+/* ─────────────────────────────────────────────
+   Navbar
+───────────────────────────────────────────── */
 .app-navbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(9, 13, 22, 0.82);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.25s;
 }
 
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.85rem 1.5rem;
+  padding: 0 1.5rem;
+  height: 56px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.5rem;
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   text-decoration: none;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .brand-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-title {
-  font-size: 1.05rem;
-  font-weight: 700;
   color: #fff;
-  letter-spacing: -0.01em;
 }
 
-.brand-subtitle {
-  font-size: 0.72rem;
-  color: var(--primary-light);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.brand-sub   { font-size: 0.65rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  flex: 1;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.9rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: color 0.15s, background 0.15s;
 }
 
-.nav-link:hover {
-  color: var(--text-main);
-  background: rgba(255, 255, 255, 0.06);
-}
+.nav-link:hover { color: var(--text); background: var(--border-subtle); }
+.nav-link-active { color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); font-weight: 600; }
 
-.nav-link-active {
-  color: var(--primary-light);
-  background: rgba(59, 130, 246, 0.12);
-  font-weight: 600;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.user-chip {
+/* Right area */
+.nav-right {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.35rem 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: 9999px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
-.user-avatar {
-  width: 28px;
-  height: 28px;
+/* Icon-only button (theme toggle) */
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+}
+.btn-icon:hover { color: var(--text); background: var(--border-subtle); }
+
+/* Avatar button (profile link) */
+.user-avatar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: #fff;
+  overflow: hidden;
+  text-decoration: none;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  transition: border-color 0.15s;
+}
+.user-avatar-btn:hover { border-color: var(--primary); }
+.user-avatar-btn.no-link { cursor: default; }
+.user-avatar-btn.no-link:hover { border-color: var(--border); }
+
+.avatar-img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatar-initials {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
   font-weight: 700;
+  background: var(--primary);
+  color: #fff;
 }
+.avatar-admin { background: #7c3aed; }
 
-.avatar-admin {
-  background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
-}
-
-.user-info {
+.user-info-block {
   display: flex;
   flex-direction: column;
+  line-height: 1.15;
 }
+.user-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+.user-meta { font-size: 0.69rem; color: var(--text-dim); }
 
-.user-name {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.1;
-}
-
-.user-meta {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
+/* ─────────────────────────────────────────────
+   Page body
+───────────────────────────────────────────── */
 .page-body {
   flex: 1;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.5rem 1.5rem 3rem;
+  padding: 1.75rem 1.5rem 3rem;
 }
 
+/* ─────────────────────────────────────────────
+   Footer
+───────────────────────────────────────────── */
 .app-footer {
-  border-top: 1px solid var(--border-color);
-  background: rgba(9, 13, 22, 0.6);
-  padding: 1.25rem 1.5rem;
-  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.9rem 1.5rem;
+  font-size: 0.78rem;
   color: var(--text-dim);
 }
-
-.footer-container {
+.footer-inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
-
-.system-status {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--text-muted);
-}
-
+.footer-status { display: flex; align-items: center; gap: 0.4rem; }
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--success);
-  box-shadow: 0 0 8px var(--success);
 }
 
-/* Button & UI Utilities */
+/* ─────────────────────────────────────────────
+   Global button utilities
+───────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
   font-weight: 600;
   font-family: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+  white-space: nowrap;
 }
 
 .btn-primary {
   background: var(--primary);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  border-color: transparent;
 }
-
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
+  background: var(--primary-dark);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-main);
-  border-color: var(--border-color);
+  background: var(--border-subtle);
+  color: var(--text);
+  border-color: var(--border);
 }
-
-.btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12);
-}
+.btn-secondary:hover:not(:disabled) { background: var(--border); }
 
 .btn-outline-danger {
   background: transparent;
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.3);
-  padding: 0.4rem 0.8rem;
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+  padding: 0.4rem 0.75rem;
   font-size: 0.82rem;
 }
-
 .btn-outline-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.5);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 55%, transparent);
 }
 
-.btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ─────────────────────────────────────────────
+   Card, form, badge utilities (shared)
+───────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
 }
 
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+.form-input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.badge-diajukan  { background: color-mix(in srgb, var(--info) 15%, transparent);    color: var(--info);    border-color: color-mix(in srgb, var(--info) 30%, transparent); }
+.badge-diproses  { background: color-mix(in srgb, var(--primary) 15%, transparent); color: var(--primary-text); border-color: color-mix(in srgb, var(--primary) 30%, transparent); }
+.badge-perbaikan { background: color-mix(in srgb, var(--warning) 15%, transparent); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+.badge-selesai   { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
+.badge-ditolak   { background: color-mix(in srgb, var(--danger) 15%, transparent);  color: var(--danger);  border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+
+/* Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+.spinner-lg {
+  width: 36px;
+  height: 36px;
+  border-width: 3px;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Loading / error / empty state container */
+.state-box {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-muted);
+}
+.state-box p { margin-top: 0.5rem; font-size: 0.9rem; }
+
+/* ─────────────────────────────────────────────
+   Responsive
+───────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .nav-container {
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .nav-links {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    overflow-x: auto;
-  }
-  .user-info {
-    display: none;
-  }
+  .nav-container { flex-wrap: wrap; height: auto; padding: 0.65rem 1rem; gap: 0.65rem; }
+  .nav-links { order: 3; width: 100%; overflow-x: auto; gap: 0.15rem; }
+  .user-info-block { display: none; }
+  .btn-label { display: none; }
 }
 </style>

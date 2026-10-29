@@ -12,7 +12,7 @@
 
     <!-- Error State -->
     <div v-else-if="errorMessage" class="state-container error-box">
-      <p>⚠️ {{ errorMessage }}</p>
+      <p>{{ errorMessage }}</p>
       <NuxtLink to="/layanan" class="btn btn-secondary">Kembali ke Daftar Layanan</NuxtLink>
     </div>
 
@@ -31,7 +31,9 @@
         <div class="meta-stats">
           <div class="meta-item">
             <span class="meta-label">Estimasi Pengerjaan</span>
-            <span class="meta-value">⏱️ {{ service.estimasi_hari ? `${service.estimasi_hari} Hari Kerja` : '1-3 Hari Kerja' }}</span>
+            <span class="meta-value">
+              {{ service.estimasi_hari ? `${service.estimasi_hari} Hari Kerja` : '1-3 Hari Kerja' }}
+            </span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Biaya Layanan</span>
@@ -41,10 +43,13 @@
 
         <div class="req-box">
           <h3 class="box-heading">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
             Persyaratan & Ketentuan
           </h3>
-          <p class="req-body">{{ service.persyaratan || 'Tidak ada persyaratan khusus.' }}</p>
+          <ol v-if="parseReqs(service.persyaratan).length > 0" class="req-list">
+            <li v-for="(item, i) in parseReqs(service.persyaratan)" :key="i">{{ item }}</li>
+          </ol>
+          <p v-else class="req-body">Tidak ada persyaratan khusus.</p>
         </div>
       </div>
 
@@ -143,6 +148,25 @@ const dokumenLink = ref('')
 const submitting = ref(false)
 const formError = ref('')
 const successMessage = ref('')
+
+const parseReqs = (val: any): string[] => {
+  if (!val) return []
+  if (Array.isArray(val)) {
+    return val.map((s: string) => String(s).replace(/^\d+\.\s*/, '').trim()).filter(Boolean)
+  }
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val)
+      if (Array.isArray(parsed)) {
+        return parsed.map((s: string) => String(s).replace(/^\d+\.\s*/, '').trim()).filter(Boolean)
+      }
+    } catch {
+      return val.split('\n').map((s: string) => s.replace(/^\d+\.\s*/, '').trim()).filter(Boolean)
+    }
+    return [val.trim()]
+  }
+  return []
+}
 
 const loadDetail = async () => {
   loading.value = true
@@ -274,7 +298,7 @@ onMounted(() => {
 .service-title {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   line-height: 1.25;
   margin-bottom: 0.85rem;
 }
@@ -339,11 +363,26 @@ onMounted(() => {
   line-height: 1.6;
 }
 
+.req-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style: decimal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.req-list li {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
 /* Form Styles */
 .form-title {
   font-size: 1.45rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 

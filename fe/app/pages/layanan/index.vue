@@ -26,13 +26,15 @@
 
     <!-- Error -->
     <div v-else-if="errorMessage" class="state-container error-box">
-      <p>⚠️ {{ errorMessage }}</p>
+      <p>{{ errorMessage }}</p>
       <button @click="loadServices" class="btn btn-secondary">Coba Muat Ulang</button>
     </div>
 
     <!-- Empty State -->
     <div v-else-if="filteredServices.length === 0" class="state-container empty-box">
-      <div class="empty-icon">🔍</div>
+      <div class="empty-icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
       <h3>Tidak Ada Layanan Ditemukan</h3>
       <p>Tidak ada layanan yang sesuai dengan kata kunci "{{ searchQuery }}".</p>
     </div>
@@ -43,7 +45,8 @@
         <div class="card-badge-row">
           <span class="service-code">{{ service.kode || 'LAYANAN-' + service.id }}</span>
           <span class="est-badge">
-            ⏱️ {{ service.estimasi_hari ? `${service.estimasi_hari} Hari Kerja` : 'Estimasi Cepat' }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>{{ service.estimasi_hari ? `${service.estimasi_hari} Hari Kerja` : 'Estimasi Cepat' }}</span>
           </span>
         </div>
 
@@ -51,8 +54,11 @@
         <p class="service-desc">{{ service.deskripsi || 'Layanan administrasi mahasiswa untuk keperluan perkuliahan.' }}</p>
 
         <div class="req-section">
-          <span class="req-title">Persyaratan Dokumen:</span>
-          <p class="req-content">{{ service.persyaratan || 'Tidak ada persyaratan khusus.' }}</p>
+          <span class="req-title">Persyaratan Dokumen</span>
+          <ol class="req-list" v-if="parseReqs(service.persyaratan).length > 0">
+            <li v-for="(item, i) in parseReqs(service.persyaratan)" :key="i">{{ item }}</li>
+          </ol>
+          <p v-else class="req-empty">Tidak ada persyaratan khusus.</p>
         </div>
 
         <div class="card-footer-action">
@@ -103,6 +109,27 @@ const filteredServices = computed(() => {
   )
 })
 
+/**
+ * Parses persyaratan which may be a JSON-encoded array or a plain string.
+ * Returns an array of clean strings without the leading "1. ", "2. " numbering.
+ */
+const parseReqs = (raw: any): string[] => {
+  if (!raw) return []
+  let arr: string[] = []
+  if (Array.isArray(raw)) {
+    arr = raw
+  } else if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw)
+      arr = Array.isArray(parsed) ? parsed : [raw]
+    } catch {
+      arr = [raw]
+    }
+  }
+  // Strip leading numbering like "1. ", "2. "
+  return arr.map((item: string) => String(item).replace(/^\d+\.\s*/, '').trim()).filter(Boolean)
+}
+
 onMounted(() => {
   loadServices()
 })
@@ -125,7 +152,7 @@ onMounted(() => {
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 
@@ -154,7 +181,7 @@ onMounted(() => {
   background: var(--surface-card);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  color: #fff;
+  color: var(--text);
   font-size: 0.88rem;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -208,6 +235,9 @@ onMounted(() => {
 }
 
 .est-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -216,7 +246,7 @@ onMounted(() => {
 .service-name {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.5rem;
   line-height: 1.3;
 }
@@ -247,10 +277,24 @@ onMounted(() => {
   margin-bottom: 0.3rem;
 }
 
-.req-content {
+.req-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: decimal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.req-list li {
   font-size: 0.82rem;
-  color: var(--text-main);
+  color: var(--text);
   line-height: 1.45;
+}
+
+.req-empty {
+  font-size: 0.82rem;
+  color: var(--text-dim);
 }
 
 .card-footer-action {
