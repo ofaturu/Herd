@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\PengajuanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -120,6 +121,17 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
                 'success' => true,
                 'message' => 'Akses dashboard admin diizinkan.',
                 'user' => $request->user()->only(['id', 'name', 'role']),
+                'stats' => [
+                    'total_pengajuan' => \App\Models\Pengajuan::count(),
+                    'diajukan' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DIAJUKAN)->count(),
+                    'diproses' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DIPROSES)->count(),
+                    'perlu_perbaikan' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_PERLU_PERBAIKAN)->count(),
+                    'disetujui' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DISETUJUI)->count(),
+                    'ditolak' => \App\Models\Pengajuan::where('status', \App\Models\Pengajuan::STATUS_DITOLAK)->count(),
+                    'total_layanan' => \App\Models\Layanan::count(),
+                    'layanan_aktif' => \App\Models\Layanan::where('is_aktif', true)->count(),
+                    'total_mahasiswa' => \App\Models\User::where('role', 'mahasiswa')->count(),
+                ],
             ]);
         });
     });
@@ -134,4 +146,23 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/layanan', [LayananController::class, 'store']);
     Route::match(['put', 'patch'], '/layanan/{layanan}', [LayananController::class, 'update']);
     Route::delete('/layanan/{layanan}', [LayananController::class, 'destroy']);
+
+    // Pengajuan routes – mahasiswa own & admin CRUD
+    // Mahasiswa (own) – list, detail, create
+    Route::post('/pengajuan', [PengajuanController::class, 'store']);
+    Route::get('/pengajuan/mine', [PengajuanController::class, 'myIndex']);
+    Route::get('/pengajuan/mine/{pengajuan}', [PengajuanController::class, 'myShow']);
+
+    // Admin – full CRUD & status change
+    Route::get('/pengajuan', [PengajuanController::class, 'index']);
+    Route::get('/pengajuan/{pengajuan}', [PengajuanController::class, 'show']);
+    Route::match(['put', 'patch'], '/pengajuan/{pengajuan}', [PengajuanController::class, 'update']);
+    Route::delete('/pengajuan/{pengajuan}', [PengajuanController::class, 'destroy']);
+    Route::post('/pengajuan/{pengajuan}/status', [PengajuanController::class, 'changeStatus']);
+});
+
+Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {
+    Route::post('/pengajuan', [PengajuanController::class, 'store']);
+    Route::get('/pengajuan/mine', [PengajuanController::class, 'myIndex']);
+    Route::get('/pengajuan/mine/{pengajuan}', [PengajuanController::class, 'myShow']);
 });

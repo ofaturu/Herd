@@ -1,357 +1,389 @@
+<template>
+  <div class="app-layout">
+    <header class="app-navbar">
+      <div class="nav-container">
+        <NuxtLink to="/" class="nav-brand">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">Portal Mahasiswa</span>
+            <span class="brand-subtitle">Layanan Terpadu</span>
+          </div>
+        </NuxtLink>
+
+        <nav class="nav-links">
+          <NuxtLink to="/layanan" class="nav-link" active-class="nav-link-active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Daftar Layanan
+          </NuxtLink>
+
+          <template v-if="user">
+            <NuxtLink to="/mahasiswa" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+              Dashboard
+            </NuxtLink>
+            <NuxtLink to="/pengajuan" class="nav-link" active-class="nav-link-active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Riwayat Pengajuan
+            </NuxtLink>
+          </template>
+        </nav>
+
+        <div class="nav-actions">
+          <template v-if="user">
+            <div class="user-chip">
+              <div class="user-avatar">{{ user.name?.charAt(0) || 'M' }}</div>
+              <div class="user-info">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="user-meta">{{ user.nim || user.role }}</span>
+              </div>
+            </div>
+            <button @click="handleLogout" class="btn btn-outline-danger" title="Logout dari sistem">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              <span>Logout</span>
+            </button>
+          </template>
+          <template v-else>
+            <NuxtLink to="/login" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+              <span>Login Mahasiswa</span>
+            </NuxtLink>
+          </template>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <NuxtPage />
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-container">
+        <p>© 2026 Portal Layanan Mahasiswa • Terintegrasi dengan Laravel 12 Sanctum API</p>
+        <div class="system-status">
+          <span class="status-dot"></span>
+          <span>Sistem Aktif & Terhubung</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted } from 'vue'
+import { useAuth } from '@/composables/useAuth'
 
-const config = useRuntimeConfig()
-const apiKey = ref(config.public.apiKey || 'SECRET_KEY_123456')
-const baseUrl = ref(config.public.apiBaseUrl || 'http://localhost:8000')
+const { user, fetchUser, logout } = useAuth()
 
-const loading = ref(false)
-const responseData = ref<any>(null)
-const errorData = ref<any>(null)
-const lastStatusCode = ref<number | null>(null)
+onMounted(async () => {
+  await fetchUser()
+})
 
-const fetchData = async (overrideKey?: string) => {
-  loading.value = true
-  responseData.value = null
-  errorData.value = null
-  lastStatusCode.value = null
-
-  const keyToUse = overrideKey !== undefined ? overrideKey : apiKey.value
-
-  try {
-    const res = await fetch(`${baseUrl.value}/api/data`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        ...(keyToUse ? { 'X-API-KEY': keyToUse } : {})
-      }
-    })
-
-    lastStatusCode.value = res.status
-    const json = await res.json()
-
-    if (!res.ok) {
-      errorData.value = json
-    } else {
-      responseData.value = json
-    }
-  } catch (err: any) {
-    lastStatusCode.value = 0
-    errorData.value = {
-      success: false,
-      message: err.message || 'Gagal menghubungi Backend. Pastikan backend Laravel sedang berjalan (misal: php artisan serve).'
-    }
-  } finally {
-    loading.value = false
+const handleLogout = async () => {
+  if (confirm('Apakah Anda yakin ingin logout?')) {
+    await logout()
   }
 }
 </script>
 
-<template>
-  <main class="app-container">
-    <div class="card">
-      <header class="header">
-        <div class="badge">Nuxt 4 + Laravel 12</div>
-        <h1>Backend & Frontend API Key Test</h1>
-        <p class="subtitle">Uji komunikasi antara Frontend dan Backend dengan header <code>X-API-KEY</code></p>
-      </header>
+<style>
+/* Modern CSS Reset & Design Tokens */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-      <section class="form-section">
-        <div class="form-group">
-          <label for="backend-url">Backend Base URL</label>
-          <input id="backend-url" v-model="baseUrl" type="text" placeholder="http://localhost:8000" />
-        </div>
-
-        <div class="form-group">
-          <label for="api-key-input">X-API-KEY Header Value</label>
-          <div class="input-wrapper">
-            <input id="api-key-input" v-model="apiKey" type="text" placeholder="Masukkan API Key..." />
-            <button class="btn-ghost" @click="apiKey = 'SECRET_KEY_123456'">Reset Default</button>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-primary" :disabled="loading" @click="fetchData()">
-            <span v-if="loading">Mengirim Permintaan...</span>
-            <span v-else>Kirim Request (Dengan API Key)</span>
-          </button>
-          <button class="btn btn-danger" :disabled="loading" @click="fetchData('')">
-            Uji Tanpa Key (Harus 401)
-          </button>
-        </div>
-      </section>
-
-      <section v-if="lastStatusCode !== null" class="result-section">
-        <div class="result-header">
-          <span class="status-indicator" :class="lastStatusCode === 200 ? 'status-ok' : 'status-err'">
-            Status: {{ lastStatusCode === 0 ? 'Connection Error' : lastStatusCode }}
-          </span>
-          <span class="endpoint-badge">GET /api/data</span>
-        </div>
-
-        <div v-if="responseData" class="response-box response-success">
-          <h3>Response Berhasil:</h3>
-          <pre>{{ JSON.stringify(responseData, null, 2) }}</pre>
-        </div>
-
-        <div v-if="errorData" class="response-box response-error">
-          <h3>Response Error / Ditolak:</h3>
-          <pre>{{ JSON.stringify(errorData, null, 2) }}</pre>
-        </div>
-      </section>
-
-      <section class="info-guide">
-        <h3>Petunjuk Testing Postman</h3>
-        <ol>
-          <li>Method: <code>GET</code></li>
-          <li>URL: <code>{{ baseUrl }}/api/data</code></li>
-          <li>Headers: Tambahkan key <code>X-API-KEY</code> dengan value <code>SECRET_KEY_123456</code></li>
-          <li>Tekan <strong>Send</strong> &rarr; Backend akan mengembalikan status <code>200 OK</code>.</li>
-        </ol>
-      </section>
-    </div>
-  </main>
-</template>
-
-<style scoped>
-:global(body) {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #0d1117;
-  color: #e6edf3;
+:root {
+  --bg-base: #090d16;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #151f38 0%, #090d16 65%);
+  --surface-card: rgba(19, 27, 46, 0.75);
+  --surface-card-hover: rgba(26, 38, 64, 0.85);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-light: #60a5fa;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #06b6d4;
+  --radius: 12px;
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.app-container {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-base);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-main);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(9, 13, 22, 0.82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
-  box-sizing: border-box;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
-.card {
-  width: 100%;
-  max-width: 680px;
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-}
-
-.header {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #58a6ff;
-  background: rgba(56, 139, 253, 0.15);
-  border: 1px solid rgba(56, 139, 253, 0.4);
-  border-radius: 999px;
-  margin-bottom: 0.75rem;
-}
-
-h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.6rem;
-  color: #f0f6fc;
-}
-
-.subtitle {
-  margin: 0;
-  color: #8b949e;
-  font-size: 0.95rem;
-}
-
-.subtitle code {
-  color: #f0883e;
-}
-
-.form-section {
+.brand-text {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #21262d;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+.brand-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
 }
 
-label {
-  font-size: 0.85rem;
+.brand-subtitle {
+  font-size: 0.72rem;
+  color: var(--primary-light);
   font-weight: 500;
-  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-input {
-  background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 6px;
-  padding: 0.65rem 0.85rem;
-  color: #c9d1d9;
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-input:focus {
-  border-color: #58a6ff;
-}
-
-.input-wrapper {
+.nav-links {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.actions {
+.nav-link {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 0.65rem 1.25rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.2s, opacity 0.2s;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background-color: #238636;
-  color: #ffffff;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #2ea043;
-}
-
-.btn-danger {
-  background-color: #da3633;
-  color: #ffffff;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background-color: #f85149;
-}
-
-.btn-ghost {
-  background: transparent;
-  border: 1px solid #30363d;
-  color: #8b949e;
-  border-radius: 6px;
-  padding: 0 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-ghost:hover {
-  background: #21262d;
-  color: #c9d1d9;
-}
-
-.result-section {
-  background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.status-indicator {
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+.nav-link:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link-active {
+  color: var(--primary-light);
+  background: rgba(59, 130, 246, 0.12);
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.8rem;
   font-weight: 700;
 }
 
-.status-ok {
-  background: rgba(46, 160, 67, 0.2);
-  color: #3fb950;
-  border: 1px solid rgba(46, 160, 67, 0.4);
+.user-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.status-err {
-  background: rgba(248, 81, 73, 0.2);
-  color: #f85149;
-  border: 1px solid rgba(248, 81, 73, 0.4);
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.1;
 }
 
-.endpoint-badge {
-  font-family: monospace;
-  font-size: 0.8rem;
-  color: #8b949e;
+.user-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
 }
 
-.response-box pre {
-  margin: 0;
-  padding: 0.75rem;
-  background: #161b22;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: #e6edf3;
+.page-body {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
 }
 
-.response-box h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.85rem;
-  color: #8b949e;
+.app-footer {
+  border-top: 1px solid var(--border-color);
+  background: rgba(9, 13, 22, 0.6);
+  padding: 1.25rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
 }
 
-.info-guide {
-  background: rgba(56, 139, 253, 0.05);
-  border: 1px solid rgba(56, 139, 253, 0.2);
-  border-radius: 8px;
-  padding: 1rem;
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.info-guide h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.95rem;
-  color: #58a6ff;
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-muted);
 }
 
-.info-guide ol {
-  margin: 0;
-  padding-left: 1.25rem;
-  color: #8b949e;
-  font-size: 0.85rem;
-  line-height: 1.6;
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
 }
 
-.info-guide code {
-  color: #f0883e;
-  background: rgba(110, 118, 129, 0.1);
-  padding: 0.1rem 0.3rem;
-  border-radius: 3px;
+/* Button & UI Utilities */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-outline-danger {
+  background: transparent;
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto;
+  }
+  .user-info {
+    display: none;
+  }
 }
 </style>

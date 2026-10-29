@@ -15,7 +15,14 @@ class LayananController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->query('per_page', 15);
-        $layanan = Layanan::aktif()->paginate($perPage);
+        $query = Layanan::query();
+        if (! ($request->query('all') && $request->user('sanctum')?->isAdmin())) {
+            $query->aktif();
+        }
+        if ($request->filled('is_aktif')) {
+            $query->where('is_aktif', filter_var($request->query('is_aktif'), FILTER_VALIDATE_BOOLEAN));
+        }
+        $layanan = $query->paginate($perPage);
         return response()->json([
             'success' => true,
             'data' => $layanan->items(),
@@ -29,11 +36,11 @@ class LayananController extends Controller
     }
 
     /**
-     * Show a specific layanan if it is active.
+     * Show a specific layanan if it is active or if requested by admin.
      */
-    public function show(Layanan $layanan): JsonResponse
+    public function show(Request $request, Layanan $layanan): JsonResponse
     {
-        if (! $layanan->is_aktif) {
+        if (! $layanan->is_aktif && ! $request->user('sanctum')?->isAdmin()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Layanan tidak ditemukan.',
